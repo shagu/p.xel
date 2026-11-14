@@ -1,0 +1,256 @@
+# subject : hooded hero, Pokemon Red/Blue style overworld sprite
+# canvas  : 16x16, 4 directions (down, up, right, left = right mirrored)
+# palette : gameboy, 4 shades only. gb.0 outline/eyes/shoes, gb.1 hood + cloak,
+#           gb.2 scarf, legs, hood shine, backpack, gb.3 face + hands
+# light   : tl (hood shine top-left, one shadow tone per material)
+# sizes   : head rows 0-8 (hood tip on row 0), body rows 9-15, legs 2-3 px
+# outline : 1 px gb.0 all around, single pixel eyes, no mouth
+# frames  : per direction a 4-beat walk: stand, step a, stand, step b (220 ms)
+#           step frames dip the upper body 1 px (bob), the planted leg stays on row 15
+#           frame 0 of every tag is the standing still pose
+# poses   : frame     upper_y  legs (down/up)       legs (side)          side hand
+#           stand        0     both down            together             mid (x9)
+#           step a      +1     left down, right up  near fwd, far back   back (x5)
+#           stand b      0     copy of stand        copy of stand        mid
+#           step b      +1     right down, left up  far fwd, near back   fwd (x10)
+# tags    : walk_down 0-3, walk_up 4-7, walk_right 8-11, walk_left 12-15 (mirror),
+#           stills 16-19 (standing copies for hero.png)
+
+canvas 16x16
+palette gameboy
+light tl
+lint orphans=gb.0,gb.3   # eyes and 1 px hands are intended
+
+map
+  o gb.0
+  d gb.1
+  l gb.2
+  w gb.3
+end
+
+# ---------- down (south) ----------
+part s_upper y
+  art 0 $y
+    ..........oo....
+    ........oodo....
+    .....ooodddo....
+    ...oodlddddoo...
+    ..odlldddddddo..
+    ..oddooooooddo..
+    ..odwwwwwwwwdo..
+    ..odwwowwowwdo..
+    ...odwwwwwwdo...
+    ..oddddddddddo..
+    .odddollllodddo.
+    .owdollllllodwo.
+    ..ooollllllooo..
+  end
+end
+
+part s_legs_stand
+  art 4 13
+    oddooddo
+    oddooddo
+    oooooooo
+  end
+end
+
+# left leg planted, right foot lifted under the hem
+part s_legs_a
+  art 4 13
+    oddooddo
+    oddooooo
+    oooo....
+  end
+end
+
+part s_legs_b
+  art 4 13
+    oddooddo
+    oooooddo
+    ....oooo
+  end
+end
+
+frame s_stand dur=220
+  draw s_upper 0
+  draw s_legs_stand
+end
+frame s_step_a dur=220
+  draw s_upper 1
+  draw s_legs_a
+end
+frame s_stand_b dur=220 from=s_stand
+end
+frame s_step_b dur=220
+  draw s_upper 1
+  draw s_legs_b
+end
+
+tag walk_down 0 3
+
+# ---------- up (north) ----------
+part n_upper y
+  art 0 $y
+    ....oo..........
+    ....odoo........
+    ....odddooo.....
+    ...odldddddoo...
+    ..odlldddddddo..
+    ..oddddddddddo..
+    ..oddddddddddo..
+    ..oddddddddddo..
+    ...oddddddddo...
+    ..odoooooooodo..
+    .oddolloolloddo.
+    .owdollllllodwo.
+    ..oooooooooooo..
+  end
+end
+
+frame n_stand dur=220
+  draw n_upper 0
+  draw s_legs_stand
+end
+frame n_step_a dur=220
+  draw n_upper 1
+  draw s_legs_a
+end
+frame n_stand_b dur=220 from=n_stand
+end
+frame n_step_b dur=220
+  draw n_upper 1
+  draw s_legs_b
+end
+
+tag walk_up 4 7
+# ---------- right (east) ----------
+part e_upper y
+  art 0 $y
+    ..ooo...........
+    ..oddoooooo.....
+    ...oddddddoo....
+    ...oddddddddo...
+    ..oddddddddddo..
+    ..oddddddooooo..
+    ..oddddddwwwwwo.
+    ..oddddddwwwowo.
+    ...odddddwwwwo..
+    ..ooodddddddo...
+    .ollodddddddo...
+    .ollolllllllo...
+    ..oooollllooo...
+  end
+end
+
+part e_legs_stand
+  art 6 13
+    oddo
+    oddo
+    oooo
+  end
+end
+
+# near hand: x = left outline of the 4 px "owwo" nub (9 stand, 5 back, 10 forward)
+part e_hand x y
+  art $x (11+$y)
+    owwo
+  end
+end
+
+# hood shine, drawn outside the mirror so the light stays top-left
+part e_shine y
+  px 5 (3+$y) gb.2
+  px 4 (4+$y) gb.2
+  px 5 (4+$y) gb.2
+end
+
+# stride: near leg drawn in gb.1, far leg in gb.0 (in shadow)
+part e_legs_a
+  art 4 13
+    .oddddo.
+    oooooddo
+    oooo.ooo
+  end
+end
+
+part e_legs_b
+  art 4 13
+    .oddddo.
+    oddooooo
+    ooo.oooo
+  end
+end
+
+# a pose for the side views, drawn facing right, mirrored for left with fx=15
+frame e_stand dur=220
+  draw e_upper 0
+  draw e_legs_stand
+  draw e_shine 0
+  draw e_hand 9 0
+end
+frame e_stride_a dur=220
+  draw e_upper 1
+  draw e_legs_a
+  draw e_shine 1
+  draw e_hand 5 1
+end
+frame e_stand_b dur=220 from=e_stand
+end
+frame e_stride_b dur=220
+  draw e_upper 1
+  draw e_legs_b
+  draw e_shine 1
+  draw e_hand 10 1
+end
+
+tag walk_right 8 11
+
+# ---------- left (west) = right mirrored ----------
+frame w_stand dur=220
+  group flipx=15
+    draw e_upper 0
+    draw e_hand 9 0
+    draw e_legs_stand
+  end
+  draw e_shine 0
+end
+frame w_stride_a dur=220
+  group flipx=15
+    draw e_upper 1
+    draw e_hand 5 1
+    draw e_legs_a
+  end
+  draw e_shine 1
+end
+frame w_stand_b dur=220 from=w_stand
+end
+frame w_stride_b dur=220
+  group flipx=15
+    draw e_upper 1
+    draw e_hand 10 1
+    draw e_legs_b
+  end
+  draw e_shine 1
+end
+
+tag walk_left 12 15
+
+# ---------- standing stills (copies of frame 0 of each walk) ----------
+frame still_down from=s_stand
+end
+frame still_up from=n_stand
+end
+frame still_right from=e_stand
+end
+frame still_left from=w_stand
+end
+
+tag stills 16 19
+
+export gif   hero-walk-down.gif  tag=walk_down  scale=6
+export gif   hero-walk-up.gif    tag=walk_up    scale=6
+export gif   hero-walk-left.gif  tag=walk_left  scale=6
+export gif   hero-walk-right.gif tag=walk_right scale=6
+export sheet hero-sheet.png rows=walk_down,walk_up,walk_left,walk_right scale=4
+export sheet hero.png tag=stills cols=4 scale=8

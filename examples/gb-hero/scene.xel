@@ -1,0 +1,155 @@
+# subject : Game Boy screen mock-up with the hooded hero standing on a forest path
+# canvas  : 160x144 (DMG screen), 16x16 metatiles: 10 x 9
+# palette : gameboy, 4 shades only
+# light   : tl
+# layout  : tree border top, left and right; light dirt path down the middle,
+#           short grass with tufts, a patch of tall grass, a sign, hero on the path
+
+canvas 160x144
+palette gameboy
+light tl
+
+map
+  o gb.0
+  d gb.1
+  l gb.2
+  w gb.3
+end
+
+# ---------- tiles ----------
+# short grass ground: mid green with two small dark tufts
+part grass x y
+  box $x $y 16 16 gb.2
+  art ($x+2) ($y+3)
+    d.d
+    .d.
+  end
+  art ($x+10) ($y+10)
+    d.d
+    .d.
+  end
+end
+
+# dirt path: plain light ground with a few pebbles
+part path x y
+  box $x $y 16 16 gb.3
+  hline ($x+4) ($y+5) 2 gb.2
+  hline ($x+10) ($y+12) 2 gb.2
+end
+
+# tall grass (wild encounter grass), 16x16 = 2x2 tufts
+part tall x y
+  box $x $y 16 16 gb.2
+  repeat 2 as j
+    repeat 2 as i
+      art ($x+$i*8) ($y+$j*8)
+        ........
+        .o...o..
+        odo.odo.
+        ldoldlo.
+        .lddlld.
+        o.ddo.do
+        oddddodo
+        oooooooo
+      end
+    end
+  end
+end
+
+# round tree, canopy lit from the top-left, trunk below
+part tree x y
+  art $x $y
+    ....oooooooo....
+    ..oollllllddoo..
+    .olllwwlllllddo.
+    .ollwwllllllddo.
+    ollllllllllddddo
+    olllllllllddddo.
+    oddlllllddddddo.
+    .oddddddddddddo.
+    .oddddddddddddo.
+    ..ooddddddddoo..
+    ....oooooooo....
+    ......oddo......
+    ......oddo......
+    .....oddddo.....
+    ....oooooooo....
+    ................
+  end
+end
+
+# wooden sign post
+part sign x y
+  art $x $y
+    ................
+    ................
+    ..oooooooooooo..
+    .owwwwwwwwwwwwo.
+    .owooooowoooowo.
+    .owwwwwwwwwwwwo.
+    .owoooowoooowwo.
+    .owwwwwwwwwwwwo.
+    ..oooooddooooo..
+    ......oddo......
+    ......oddo......
+    ......oddo......
+    .....oooooo.....
+    ................
+    ................
+    ................
+  end
+end
+
+# ---------- hero (copied from hero.xel, standing, facing down) ----------
+part hero x y
+  art $x $y
+    ..........oo....
+    ........oodo....
+    .....ooodddo....
+    ...oodlddddoo...
+    ..odlldddddddo..
+    ..oddooooooddo..
+    ..odwwwwwwwwdo..
+    ..odwwowwowwdo..
+    ...odwwwwwwdo...
+    ..oddddddddddo..
+    .odddollllodddo.
+    .owdollllllodwo.
+    ..ooollllllooo..
+    ....oddooddo....
+    ....oddooddo....
+    ....oooooooo....
+  end
+end
+
+# ---------- map ----------
+bg gb.3
+repeat 9 as ty
+  repeat 10 as tx
+    draw grass ($tx*16) ($ty*16)
+  end
+end
+repeat 9 as ty
+  draw path 64 ($ty*16)
+  draw path 80 ($ty*16)
+end
+repeat 3 as ty
+  repeat 2 as tx
+    draw tall (112+$tx*16) (64+$ty*16)
+  end
+end
+repeat 10 as tx
+  draw tree ($tx*16) 0
+end
+repeat 8 as ty
+  draw tree 0 (16+$ty*16)
+  draw tree 144 (16+$ty*16)
+end
+repeat 4 as tx
+  draw path (16+$tx*16) 96
+end
+draw sign 40 64
+draw hero 72 72
+
+lint orphans=gb.0
+export png hero-scene.png scale=4
