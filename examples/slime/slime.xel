@@ -1,0 +1,255 @@
+# subject : cute blue slime enemy (rpg blob), front view
+# canvas  : 32x32 per frame, transparent background
+# style   : cute preset (round shapes, saturated mids, hue shift 16/step, selout)
+# palette : gel ramp (5, auto, cools into indigo) + spec, ink, blush, shadow = 9 colors
+# light   : top-left
+# sizes   : neutral body 22 w x 16 h, ground row 27, center x 15.5
+# passes  : 1 silhouette, 2 flats, 3 light, 4 face, 5 outline, 6 polish, 7 frames
+# frames  : idle 0-7 (breathing squash and stretch, blink), move 8-15 (in-place hop)
+#           every pose is the same parts with new w, h, lift: no redrawn pixels
+
+canvas 32x32
+light tl
+name "slime"
+
+ramp gel auto base=#3a8ee0 steps=5 hue=16 dir=-1
+color spec  #f2fcff
+color ink   #161230
+color blush #f590b4
+color shadow #33304f
+# eye catchlights, eye glints, the spec dot and the mouth corners are 1 px on purpose
+lint orphans=spec,gel.3,gel.4,ink
+
+# blob: the bare body silhouette in one color (reused for the rim trick).
+# cut = color for the two rounded bottom corners: none, or c itself when the
+# blob is only used as a mask (a none would punch holes through "only")
+part blob w h lift c cut
+  let bot = 27 - $lift
+  let top = $bot - $h + 1
+  # the bottom rounds off once the slime leaves the ground
+  let ry = round($h*(0.8-min($lift,3)*0.05))
+  clip 0 $top 32 $h
+    # oval spans are always odd, so two ovals 1 px apart give an even width around 15.5
+    oval 15 ($top+$ry) ($w/2-1) $ry $c
+    oval 16 ($top+$ry) ($w/2-1) $ry $c
+  end
+  # round the two bottom corners
+  px (16-$w/2) $bot $cut
+  px (15+$w/2) $bot $cut
+end
+
+# body: w = width (even), h = height, lift = px above the ground, lean = tip lean
+part body w h lift lean
+  let bot = 27 - $lift
+  let top = $bot - $h + 1
+  let rx = $w/2 - 1
+  # pass 1: silhouette, painted in the shadow tone
+  draw blob $w $h $lift gel.1 none
+  # little drip tip on top, leaning right
+  px (16+$lean) ($top-2) gel.2
+  px (17+$lean) ($top-2) gel.1
+  hline 15 ($top-1) 2 gel.2
+  px 17 ($top-1) gel.1
+  # bounce rim: light passing through the gel lights the lower right inner edge.
+  # paint the shadow region with a marker (ink, gel.4 are free at this point),
+  # then put the shifted silhouettes back
+  # (a clip around the draws would not work: the clip inside blob replaces it)
+  only color gel.1
+    draw blob $w $h $lift ink ink
+  end
+  # a pixel goes back to shadow only if its right and its lower neighbours are inside
+  only color ink
+    draw blob $w $h $lift gel.4 gel.4 dx=-1
+  end
+  only color gel.4
+    draw blob $w $h ($lift+1) gel.1 gel.1
+  end
+  replace gel.4 ink
+  only color ink
+    box 0 0 (round(15.5+$w*0.14)) 32 gel.1
+    box 0 0 32 ($bot-round($h*0.45)) gel.1
+  end
+  replace ink gel.2
+  # pass 3: light from the top-left, terminator follows the form
+  only color gel.1
+    oval (floor(15-$w*0.12)) (round($top+$h*0.4)) (floor($rx*1.0)) (round($h*0.45)) gel.2
+  end
+  only color gel.2
+    oval (floor(15-$w*0.24)) (round($top+$h*0.25)) (floor($rx*0.42)) (round($h*0.2)) gel.3
+  end
+  # specular streak on the upper left, a curved glint plus a dot
+  let sx = round(15.5-$w*0.3)
+  let sy = round($top+$h*0.18)
+  only solid
+    hline ($sx+1) $sy 2 spec
+    px $sx ($sy+1) spec
+    px $sx ($sy+2) spec
+    px ($sx+4) $sy gel.4
+  end
+  # two tiny air bubbles floating in the shadow side of the gel
+  only color gel.1
+    px (round(15.5+$w*0.2)) ($bot-3) gel.3
+    px (round(15.5+$w*0.28)) ($bot-round($h*0.38)) gel.2
+  end
+  # pass 5: hand selout, dark indigo outline, one step lighter on the lit top-left
+  outline gel.0
+  only color gel.0
+    box 0 0 32 ($top-2) gel.1
+    shape 0,0 16,0 16,($top+1) 0,($bot-4) gel.1
+  end
+end
+
+# ground shadow: flat oval on row 28, shrinks while the slime is up in the air
+part shadow w lift
+  only empty
+    oval 15 28 (round($w/2+1-$lift*0.6)) 1 shadow
+    oval 16 28 (round($w/2+1-$lift*0.6)) 1 shadow
+  end
+end
+
+# face: follows the body box. eyes 2 px wide, eh px tall (4 normal, 3 squashed)
+# with a catchlight on top and a glint at the bottom
+part face w h lift eh
+  let bot = 27 - $lift
+  let ey = $bot - round($h*0.5)
+  let a = 16 - round($w*0.15) - 2
+  let b = 30 - $a
+  box $a $ey 2 $eh ink
+  box $b $ey 2 $eh ink
+  px $a $ey spec
+  px $b $ey spec
+  px ($a+1) ($ey+$eh-1) gel.3
+  px ($b+1) ($ey+$eh-1) gel.3
+  draw mouth $w $ey+$eh-1 $a $b
+end
+
+# squint: eyes pressed shut as > <, used on the hard impact
+part squint w h lift
+  let bot = 27 - $lift
+  let ey = $bot - round($h*0.5)
+  let a = 16 - round($w*0.15) - 2
+  let b = 30 - $a
+  px $a $ey ink
+  px ($a+1) ($ey+1) ink
+  px $a ($ey+2) ink
+  px ($b+1) $ey ink
+  px $b ($ey+1) ink
+  px ($b+1) ($ey+2) ink
+  draw mouth $w ($ey+2) $a $b
+end
+
+# blink: calm closed eyes, a 2 px lash line on the lower half of the eye
+part blink w h lift
+  let bot = 27 - $lift
+  let ey = $bot - round($h*0.5)
+  let a = 16 - round($w*0.15) - 2
+  let b = 30 - $a
+  hline $a ($ey+2) 2 ink
+  hline $b ($ey+2) 2 ink
+  draw mouth $w ($ey+2) $a $b
+end
+
+# tiny smile and the blush, my = row of the smile corners
+part mouth w my a b
+  px 14 $my ink
+  hline 15 ($my+1) 2 ink
+  px 17 $my ink
+  hline ($a-2) ($my+1) 2 blush
+  hline ($b+2) ($my+1) 2 blush
+end
+
+# one complete pose. sw = width the ground shadow is sized from
+part pose w h lift lean eh sw
+  draw body $w $h $lift $lean
+  draw face $w $h $lift $eh
+  draw shadow $sw $lift
+end
+part pose_blink w h lift lean sw
+  draw body $w $h $lift $lean
+  draw blink $w $h $lift
+  draw shadow $sw $lift
+end
+part pose_squint w h lift sw
+  draw body $w $h $lift 0
+  draw squint $w $h $lift
+  draw shadow $sw $lift
+end
+
+# ---------- idle: breathing wobble, 8 frames, volume kept (w x h ~ 350) ----------
+# the tip lags one frame behind the body (follow through), one calm blink
+# frame   w   h   lean  eyes   note
+# i0      22  16   0    open   neutral
+# i1      24  15   0    open   sinking
+# i2      26  14   1    3 px   squash, hold
+# i3      26  14   1    blink  squash, eyes closed
+# i4      24  15   1    open   rising
+# i5      22  16   0    open   passing neutral
+# i6      20  17  -1    open   stretch, hold
+# i7      20  17   0    open   tip settles
+frame i0 dur=160
+  draw pose 22 16 0 0 4 22
+end
+frame i1 dur=130
+  draw pose 24 15 0 0 4 24
+end
+frame i2 dur=200
+  draw pose 26 14 0 1 3 26
+end
+frame i3 dur=130
+  draw pose_blink 26 14 0 1 26
+end
+frame i4 dur=130
+  draw pose 24 15 0 1 4 24
+end
+frame i5 dur=130
+  draw pose 22 16 0 0 4 22
+end
+frame i6 dur=200
+  draw pose 20 17 0 -1 4 20
+end
+frame i7 dur=160
+  draw pose 20 17 0 0 4 20
+end
+
+# ---------- move: in-place hop, 8 frames ----------
+# frame   w   h   lift  note
+# m0      26  13   0    anticipation squash
+# m1      18  20   1    launch stretch
+# m2      20  18   5    rising
+# m3      22  16   8    apex, hang
+# m4      18  19   4    falling stretch
+# m5      28  12   0    impact squash, eyes shut
+# m6      20  17   0    rebound overshoot
+# m7      22  16   0    settle
+frame m0 dur=140
+  draw pose 26 13 0 0 3 26
+end
+frame m1 dur=70
+  draw pose 18 20 1 0 4 20
+end
+frame m2 dur=80
+  draw pose 20 18 5 0 4 22
+end
+frame m3 dur=140
+  draw pose 22 16 8 0 4 22
+end
+frame m4 dur=70
+  draw pose 18 19 4 0 4 22
+end
+frame m5 dur=70
+  draw pose_squint 28 12 0 26
+end
+frame m6 dur=90
+  draw pose 20 17 0 -1 4 20
+end
+frame m7 dur=110
+  draw pose 22 16 0 0 4 22
+end
+
+tag idle 0 7
+tag move 8 15
+
+export gif   slime-idle.gif  tag=idle scale=6
+export gif   slime-move.gif  tag=move scale=6
+export sheet slime-sheet.png cols=8 scale=4
+export png   slime.png       frame=0 scale=8
