@@ -1,0 +1,37 @@
+# still: the paladin facing se in his idle stance on a small flagstone slab
+# canvas  : 80x80, figure shifted by (8,4) so the feet sit at x=40 y=60
+# floor   : 2x2 flagstones of 32x16 on a 64x32 slab (isobox h=4, its top is the grout)
+# order   : figure -> selout outline -> slab painted behind (only empty) -> shadow
+# output  : paladin.png at scale 6
+
+canvas 80x80
+light tl
+name "paladin still"
+include "paladin-parts.xel"
+lint orphans=off
+
+group dx=8 dy=4
+  draw fig se 0 3 0 -3 0 0 0
+end
+outline selout ink=void
+only empty
+  isogrid 40 40 32 16
+  isotile 0.05 0.05 stone.2 w=0.9 d=0.9
+  isotile 1.05 0.05 stone.2 w=0.9 d=0.9
+  isotile 0.05 1.05 stone.1 w=0.9 d=0.9
+  isotile 1.05 1.05 stone.2 w=0.9 d=0.9
+  isobox 0 0 stone.0 stone.1 stone.0 w=2 d=2 h=4 lift=-4
+end
+# soft 2:1 shadow: void core, one step darker ring, floor pixels only
+repeat 5 as k
+  only color stone.$k
+    oval 40 60 10 3 void
+  end
+end
+repeat 4 as k from=1
+  only color stone.$k
+    shade 40 60 13 5 steps=1 hard=true
+  end
+end
+
+export png paladin.png scale=6

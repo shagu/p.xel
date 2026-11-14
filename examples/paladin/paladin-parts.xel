@@ -1,0 +1,743 @@
+# paladin-parts: heavy armored paladin for an isometric dark fantasy rpg
+# style   : dark-fantasy-iso (diablo ii flavoured), light tl, selout outline
+# canvas  : parts are drawn for a 64x64 cell, feet anchor at x=32 y=56
+# sizes   : helm top y8, helm 9 wide, shoulders 29 wide, belt y30, hem y44,
+#           ankles y53, soles y55-56 (near foot 1 px lower in the diagonal views)
+# palette : dark-fantasy steel (armor), gold (trim, cross), blood (tabard, cape,
+#           shield field), void (shadow)
+# dirs    : drawn s se e ne n, mirrored sw w nw with group flipx=63
+# parts   : body_<d> tabtop_<d> tabbot_<d> shield_<d> foot_<d> per direction,
+#           generic leg arm fist mace cape knee0/1, assembled by pal_<d> in the
+#           z-order of that direction; fig / figm (mirrored + relight) / pal / palm
+#           wrap them, finish adds the selout outline and the floor shadow
+palette dark-fantasy
+# diablo ii mood: grimy desaturated steel, tarnished gold, dried blood red
+ramp steel #0c0c0f #1d1e22 #34363b #55575a #8a8a84
+ramp gold #170f05 #36250e #5e451c #8c6c32 #bb9a55
+ramp blood #100304 #2a080a #4c1012 #74191a #9c2c24
+color glint #d6d2bf
+map
+  * glint
+  o void
+  k steel.0
+  d steel.1
+  m steel.2
+  l steel.3
+  w steel.4
+  u gold.0
+  y gold.1
+  g gold.2
+  G gold.3
+  Y gold.4
+  q blood.0
+  r blood.1
+  R blood.2
+  e blood.3
+  E blood.4
+end
+
+part leg hx hy ax ay bx by far
+  let kx = round(($hx+$ax)/2+$bx)
+  let ky = round(($hy+$ay)/2+$by)
+  # dark crease where the leg overlaps something already drawn (never on the outline)
+  only solid
+    line ($hx-4) $hy ($kx-4) $ky steel.0
+    line ($hx+3) $hy ($kx+3) $ky steel.0
+    line ($kx-3) $ky ($ax-3) $ay steel.0
+    line ($kx+3) $ky ($ax+3) $ay steel.0
+  end
+  repeat 6 as i
+    let c = if($i<2,3,if($i<4,2,1))-$far
+    line ($hx-3+$i) $hy ($kx-3+$i) $ky steel.$c
+  end
+  repeat 5 as i
+    let c = if($i<2,3,if($i<4,2,1))-$far
+    line ($kx-2+$i) $ky ($ax-2+$i) $ay steel.$c
+  end
+  # greave ridge catches the light
+  line ($kx-1) ($ky+2) ($ax-1) ($ay-1) steel.(4-$far)
+  draw knee$far $kx $ky
+end
+
+part knee0 x y
+  art ($x-2) ($y-1)
+    .lww.
+    llwwd
+    mmmdd
+  end
+end
+part knee1 x y
+  art ($x-2) ($y-1)
+    .mll.
+    mmllk
+    dddkk
+  end
+end
+
+part foot_s x y far
+  art ($x-3) ($y-3)
+    .lwlm.
+    lwllmd
+    lllmmd
+    ddddkk
+  end
+end
+
+part body_s b
+  art 18 (8+$b)
+    ............lwGmm............
+    ...........lwwGlmd...........
+    ..........lwwlGlmmd..........
+    ..........lw*lGlmdd..........
+    ..........GGYYGGggg..........
+    ..........loooGoood..........
+    ..llwwl...llmmGmmdd...llmmd..
+    .lwwwwlll..lmmGmmd..llmmmmddd
+    lww*wllmmd.kddGddd.llwwmmmddk
+    lwwlllmmmdkllwwllmdlllmmmmddk
+    mmmmmmmdddkllllllmdmmmmmdddkk
+    lllllmmmddkeeRRRRrdlllmmmmddk
+    GGGGGGggggkeRRGRRrdggggggyyyy
+    .lllmmmdddkeRRGRRrdmmmmmdddd.
+    ........mlleGGGGGrdk.........
+    ........mlleRRGRRrdk.........
+    ........mlleRRGRRrdk.........
+    .........lleRRGRRrdk.........
+    .........lleRRGRRrdk.........
+    .........lleRRRRRrdk.........
+    .........lleRRRRrrdk.........
+    .........ddeRRRRrrkk.........
+    ........GGGGGYYYgggy.........
+    ........yyyyyGGGyyyy.........
+    ......llllllmmmmmmddk........
+    ......lllllmmmmmmmddk........
+    ......GGGGGggggggyyyy........
+    .......dlllmmmmmmdkk.........
+    ........ddddddddddkk.........
+  end
+end
+
+# lower panel hangs in front of the faulds, hem swings by sw
+part tabbot_s b sw
+  art 28 (32+$b)
+    .rrrrrrr.
+    .eRRRRRr.
+    .eRRRRrr.
+    .eRrRRrr.
+    eeRrRRRrq
+  end
+  art (28+$sw) (37+$b)
+    eeRrRRRrq
+    eRRrRRRrq
+    eRRrRRrrq
+    eRRrRRrrq
+    eRRrRRrrq
+    eRRrRRrrq
+    eRRrRRrrq
+    GGGgggyyy
+  end
+end
+
+part shield_s x y
+  art $x $y
+    ..GGGGGggg..
+    .GeeewlRRRg.
+    GeeeewlRRRrg
+    GeeeewlRRRrg
+    GeeeewlRRrrg
+    Glwww*lllldg
+    Glllllmmmddg
+    GeeeewlRRrrg
+    GeeeewlRRrry
+    GeeeRwlRRrry
+    GeeeRwlRRrry
+    .GeeRwlRrry.
+    .GeeRwlRrry.
+    .GeRRwlRrry.
+    ..GeRwlRry..
+    ..GeRwlrry..
+    ..GeRwmrry..
+    ...GRwmry...
+    ...GRlmry...
+    ....GlRy....
+    ....GRRy....
+    .....Gy.....
+    .....yy.....
+  end
+end
+
+# right arm with the mace, hand at (hx,hy)
+part armr_s b hx hy
+  art 19 (21+$b)
+    lwlmd
+    llmmd
+    lllmd
+    llmmd
+    dkkkd
+  end
+  art ($hx-2) ($hy-9)
+    .lwlmd
+    .llmmd
+    .lllmd
+    .lmmmd
+    .GGggy
+    .lllmd
+    llwlmd
+    lllmmd
+    dmmmdk
+  end
+  vline $hx ($hy) 5 gold.1
+  art ($hx-3) ($hy+4)
+    ...l...
+    .llwmd.
+    lwwlmmd
+    .llmmd.
+    lllmmdd
+    .lmmdd.
+    ...d...
+  end
+end
+
+
+
+# ---------- se ----------
+# 3/4 front view: near (right) pauldron big on the left, far pauldron small and
+# hidden by the shield, helm and tabard turned toward the lower right
+part foot_se x y far
+  art ($x-3) ($y-3)
+    .lwl...
+    lwllmd.
+    .llmmmd
+    ..kdddk
+  end
+end
+
+part body_se b
+  art 18 (8+$b)
+    ............lwwlm............
+    ...........lwwwlGm...........
+    ..........lwwlllGmd..........
+    ..........lw*lllGmd..........
+    ..........llGGGYYGgy.........
+    ..........llmoooGooo.........
+    ..lwwwl...lmmmmmGmd..lmmd....
+    .lwwwwwll..dmmmmGmd..lmmmmd..
+    lww*wwlmmd..kddddd..lmmmmmd..
+    lwwwllmmmdklwwlllmmdlmmmmmddk
+    dmmmmmmddkklwllllmmdgggyyyyuu
+    lwllllmmddklllleRRRRrdmmmddk.
+    GGGGGGgggykllleRRGRRrdmmmdk..
+    .mllmmmddkklllGGGGGggdmmdk...
+    .........mlwlleRRGRRrdmdk....
+    .........mlwlleRRGRRrdmdk....
+    .........mlwlleRRGRRrdmdk....
+    .........mlwlleRRRRRrdmdk....
+    .........mlwlleRRRRrrdmdk....
+    .........mllmleRRRRrrdmdk....
+    .........dllmleRRRRrrqdkk....
+    .........kddddeRRRrrrqkkk....
+    ........GGGGGGGGYYgggyu......
+    ........yyyyyyyyGGyyyuu......
+    ......lllllmmmmmmmmmddk......
+    ......lllmmmmmmmmmmdddk......
+    ......GGGGggggggggyyyyu......
+    .......dllmmmmmmmmmddk.......
+    .......kddddddddddddk........
+  end
+end
+
+part tabbot_se b sw
+  art 32 (32+$b)
+    rrrrrrq
+    eRRRRrr
+    eRRRrrq
+    eRrRrrq
+    eRrRRrq
+  end
+  art (32+$sw) (37+$b)
+    eRrRRrq
+    eRrRRrq
+    eRrRrrq
+    eRrRrrq
+    eRrRrrq
+    eRrRrrq
+    GGGgggy
+  end
+end
+
+# shield seen at an angle: narrower face, thick dark rim on the far edge
+part shield_se x y
+  art $x $y
+    .GGGGggu.
+    GeeRwlRgu
+    GeeRwlRru
+    GeRRwlRru
+    Glwwwlmdu
+    Gmmllmddu
+    GeRRwlRru
+    GeRRwlrru
+    GeRRwlrru
+    GeRRwlrru
+    .GRRwlrru
+    .GRRwlrru
+    .GeRwlrru
+    ..GRwlru.
+    ..GRwlru.
+    ..GRwlru.
+    ...Gwlru.
+    ...Gwlu..
+    ...Glru..
+    ....Gu...
+    ....u....
+  end
+end
+
+# ---------- generic limbs ----------
+let el = 0
+let er = 0
+# plate arm: shoulder (sx,sy) -> elbow (ex,ey) -> wrist (hx,hy), 4 px thick
+part arm sx sy ex ey hx hy far
+  # dark crease where the arm passes in front of the body (el left, er right)
+  repeat $el
+    line ($sx-3) ($sy+2) ($ex-3) $ey steel.0
+    line ($ex-3) $ey ($hx-3) ($hy-1) steel.0
+  end
+  repeat $er
+    line ($sx+2) ($sy+2) ($ex+2) $ey steel.0
+    line ($ex+2) $ey ($hx+2) ($hy-1) steel.0
+  end
+  repeat 4 as i
+    let c = if($i<2,3,if($i<3,2,1))-$far
+    line ($sx-2+$i) $sy ($ex-2+$i) $ey steel.$c
+    line ($ex-2+$i) $ey ($hx-2+$i) $hy steel.$c
+  end
+  # elbow cop and gold cuff
+  hline ($ex-2) $ey 4 steel.(4-$far)
+  hline ($ex-2) ($ey+1) 4 steel.(1-$far)
+  hline ($hx-2) ($hy-1) 4 gold.(3-$far)
+end
+
+# gauntlet fist around the grip at (hx,hy)
+part fist hx hy far
+  art ($hx-2) $hy
+    lwwm
+    llmd
+    mmdd
+  end
+end
+
+# flanged mace: grip at (hx,hy), head centre at (tx,ty)
+part mace hx hy tx ty
+  line $hx $hy $tx $ty gold.1
+  # void ring keeps the head readable against the dark cape
+  art ($tx-3) ($ty-4)
+    ..oyo..
+    .olwmo.
+    olw*lmo
+    olwllmo
+    olllmdo
+    .ommdo.
+    ..ooo..
+    .......
+  end
+end
+
+# ---------- e ----------
+part foot_e x y far
+  art ($x-3) ($y-3)
+    .lwl....
+    lwlllmm.
+    llmmmmmd
+    kdddddkk
+  end
+end
+
+part body_e b
+  art 18 (8+$b)
+    .............lwwl.........
+    ...........lwwwllm........
+    ..........lwwllllmd.......
+    ..........lwlllllmd.......
+    ..........GYYGGGGgG.......
+    ..........llllmoooG.......
+    ..........lllmmmmdG.......
+    ..........dlmmmmmdG.......
+    .......lwwlkdmmmdGk.......
+    .....lwwwllllkklwlmd......
+    .....lwwlllllmkdlwlmd.....
+    .....dmmmmmmddkklllmd.....
+    .....lwllllllmddkllmd.....
+    .....GGGGGGgggyykdlmd.....
+    ......dmmmmmmddkdlmmd.....
+    .......llmmmmmmmmmmmd.....
+    .......llmmmmmmmmmmdd.....
+    ........lmmmmmmmmmmd......
+    ........lmmmmmmmmmdd......
+    ........lmmmmmmmmddk......
+    ........dmmmmmmmmddk......
+    ........kddddddddddk......
+    ........GGGGGGGgggg.......
+    ........yyyyyyyyyyy.......
+    .......lwllmmmmmmmdk......
+    .......llllmmmmmmmddk.....
+    ......GGGGgggggggyyyy.....
+    ......dllmmmmmmmmmdk......
+    .......kdddddddddddk......
+  end
+end
+
+# front and back flaps of the tabard seen in profile
+part tabtop_e b
+  art 35 (19+$b)
+    eRr
+    eGr
+    GYg
+    eGr
+    eRr
+    eRr
+    eRr
+    eRr
+    eRr
+    eRr
+    eRr
+  end
+end
+
+part tabbot_e b sw
+  art (34+$sw) (32+$b)
+    .rrq.
+    .eRr.
+    .eRrq
+    eeRrq
+    eRRrq
+    eRRrq
+    eRRrq
+    eRRrq
+    eRRrq
+    eRrrq
+    eRrrq
+    GGgyy
+  end
+end
+
+# shield held forward on the far arm, seen from the side: the face turns away
+# from the light, a lit rim faces the body, the steel cross reads as one bar
+part shield_e x y
+  art $x $y
+    .GGggu.
+    GeRRRgu
+    GeRwRru
+    GeRwRru
+    GeRwRru
+    Glwwlmu
+    Gmllmdu
+    GeRwRru
+    GeRwrru
+    GeRwrru
+    GeRwrru
+    GeRwrru
+    .GRwrru
+    .GRwrru
+    .GRwru.
+    ..Gwru.
+    ..Gwru.
+    ..Glu..
+    ...Gu..
+    ...u...
+  end
+end
+
+
+# ---------- cape ----------
+# gathered at the shoulders (tlx..trx at ty), flaring to the hem (blx..brx at by).
+# the hem trails by sw (lags the body one frame), n folds fan out from the clasp:
+# each fold is a lit ridge and a shadow valley that taper from 1 px to 2 px, the hem
+# is scalloped (ridges hang lower, valleys tuck up) and ripples with sw
+part cape tlx trx ty blx brx by sw c n=4
+  let bl = $blx+$sw
+  let br = $brx+$sw
+  let my = round($ty+($by-$ty)*0.6)
+  let mlx = round($tlx+($bl-$tlx)*0.6)-1
+  let mrx = round($trx+($br-$trx)*0.6)+1
+  shape $tlx,$ty $trx,$ty $mrx,$my $br,$by $bl,$by $mlx,$my blood.$c
+  line $tlx $ty $mlx $my blood.($c+1)
+  line $mlx $my $bl $by blood.($c+1)
+  repeat $n as k
+    let xt = round($tlx+($trx-$tlx)*($k+0.5)/$n)
+    let xb = round($bl+($br-$bl)*($k+0.5)/$n)+(($k*5+1)%3)-1
+    let hb = $by+(($k+$sw+10)%2)
+    shape $xt,($ty+2) ($xb-1),$hb $xb,$hb blood.($c+1)
+    shape ($xt+1),($ty+3) ($xb+1),($by-1) ($xb+2),($by-1) blood.($c-1)
+    px ($xb+2) $by none
+  end
+  # the first fold catches the light near the shoulders
+  let xt0 = round($tlx+($trx-$tlx)*0.5/max($n,1))
+  let xb0 = round($bl+($br-$bl)*0.5/max($n,1))-1
+  let hc = min($c+2,4)
+  line $xt0 ($ty+2) (round(($xt0+$xb0)/2)) $my blood.$hc
+  line $trx $ty $mrx $my blood.($c-1)
+  line $mrx $my $br $by blood.($c-1)
+end
+
+# ---------- n ----------
+part foot_n x y far
+  art ($x-3) ($y-2)
+    lwllmd
+    llmmmd
+    kddddk
+  end
+end
+
+part body_n b
+  art 18 (8+$b)
+    ............lwGlm............
+    ...........lwwGlmd...........
+    ..........lwwlglmmd..........
+    ..........lwllglmdd..........
+    ..........GGYYGGggg..........
+    ..........lllmmmmdd..........
+    ...lwwl...llmmmmmdd...lmmd...
+    .lwwwwlll.llmmmmmdk.llmmmmdd.
+    lwwwlllmmd.dmmmmdk.lllmmmmddk
+    lwwllllmmdkkdmmmdkklmmmmmmddk
+    dmmmmmmddklwwlllmmddddddddkkk
+    lwllllmmddlwlllmmddlmmmmmdddk
+    GGGGGGgggglwllmmmddgggggyyyyy
+    .mllmmmddklwllmmmddkdmmmddkk.
+    ........mlllllmmmddk.........
+    ........mlllmmmmmddk.........
+    ........mllmmmmmdddk.........
+    .........lllmmmmddk..........
+    .........llmmmmmddk..........
+    .........lmmmmmdddk..........
+    .........dmmmmmddkk..........
+    .........kddddddddk..........
+    ........GGGGGYYGggg..........
+    ........yyyyyGGyyyy..........
+    ......llllllmmmmmmddk........
+    ......lllllmmmmmmdddk........
+    ......GGGGgggggggyyyy........
+    .......dlllmmmmmmddk.........
+    .......kdddddddddddk.........
+  end
+end
+
+# back of the kite shield: dark wood, leather straps, gold rim
+part shield_n x y
+  art $x $y
+    ..ugggggy...
+    .gyyyyyyyu..
+    gyyyyyyyyuu.
+    gyyyyyyyyuuu
+    gyyyyyyyyuuu
+    gdddmmddddku
+    gyyyyyyyyuuu
+    gyyyyyyyyuuu
+    gyyyyyyyyuuu
+    gyyyyyyyyuuu
+    gdddmmddddku
+    .gyyyyyyyuu.
+    .gyyyyyyyuu.
+    .gyyyyyyyuu.
+    ..gyyyyyuu..
+    ..gyyyyyuu..
+    ..gyyyyyuu..
+    ...gyyyuu...
+    ...gyyyuu...
+    ....gyuu....
+    ....gyuu....
+    .....gu.....
+    .....uu.....
+  end
+end
+
+
+# ---------- ne ----------
+part foot_ne x y far
+  art ($x-3) ($y-3)
+    ...lwl
+    ..lwlmd
+    .llmmd.
+    kdddk..
+  end
+end
+
+# 3/4 back view: near (right) pauldron big on the right, far pauldron small and high,
+# the right side of the torso and helm turns into the shadow
+part body_ne b
+  art 18 (8+$b)
+    ...........lwwlm.............
+    ..........lwwwllm............
+    .........lwwllllmd...........
+    .........lw*lllmmd...........
+    .........GGYYGGgggu..........
+    .........lllmmmmddo..........
+    ....lwwl.lllmmmmmdo..lwwwlm..
+    ...lwwlll.dmmmmmdk..lwwwwllmd
+    ...lw*llmd..kdddk..lww*wlllmd
+    ...lwllmmdklwwlllmdlwwllllmmd
+    ...gggyyuuklwllllmddmmmmmmmdk
+    ....dmmdk.klwlllmmdlmmmmmmddk
+    .........mlllllmmddGGGGGGgggy
+    .........mlllllmmddkdmmmmmddk
+    .........mllllmmmddmdk.......
+    .........mllllmmmddmdk.......
+    .........mlllmmmmddmdk.......
+    .........mlllmmmmddmdk.......
+    .........mllmmmmmddmdk.......
+    .........mllmmmmdddmdk.......
+    .........dlmmmmmdddkdk.......
+    .........kddddddddddkkk......
+    ........GGGGGGGggggyyu.......
+    ........yyyyyyyyyyyyuu.......
+    ......llllllmmmmmmmddk.......
+    ......lllllmmmmmmmdddk.......
+    ......GGGGgggggggyyyyu.......
+    .......dllmmmmmmmmddk........
+    .......kdddddddddddkk........
+  end
+end
+
+part shield_ne x y
+  art $x $y
+    ..uggggy.
+    .gyyyyyyu
+    gyyyyyyuu
+    gyyyyyyuu
+    gyyyyyyuu
+    gdddmmddk
+    gyyyyyyuu
+    gyyyyyyuu
+    gyyyyyyuu
+    gyyyyyyuu
+    gdddmmddk
+    .gyyyyyu.
+    .gyyyyyu.
+    .gyyyyyu.
+    ..gyyyuu.
+    ..gyyyuu.
+    ...gyyu..
+    ...gyuu..
+    ....gu...
+    ....uu...
+  end
+end
+
+
+# ---------- assembly ----------
+# one leg with its foot: hip (hx,hy), resting ankle (ax,ay), stride st along the
+# walking direction (ux,uy) in screen px, lift li, foot variant d
+part stride hx hy ax ay st li ux uy far d
+  let fx = round($ax+$st*$ux)
+  let fy = round($ay+$st*$uy-$li)
+  draw leg $hx $hy $fx $fy (round($li*$ux*0.8)) (round($li*$uy*0.8)) $far
+  draw foot_$d $fx ($fy+2) $far
+end
+
+# pose parameters (same table for every direction, see paladin.xel):
+# b body bob, rs/rl right leg stride/lift, ls/ll left leg stride/lift,
+# aw weapon arm swing, sw cape and hem sway (lags one frame)
+part pal_s b rs rl ls ll aw sw
+  let hy = round($aw*0.5)
+  draw cape 24 40 (22+$b) 21 43 50 $sw 1 n=0
+  draw stride 27 (36+$b) 27 53 $rs $rl 0 0.5 0 s
+  draw stride 37 (36+$b) 37 53 $ls $ll 0 0.5 1 s
+  draw body_s $b
+  draw tabbot_s $b $sw
+  draw arm 21 (22+$b) 21 (29+$b+round($hy/2)) 21 (34+$b+$hy) 0 er=1
+  draw mace 21 (36+$b+$hy) 21 (44+$b+$hy)
+  draw fist 21 (34+$b+$hy) 0
+  draw shield_s 39 (19+$b-round($aw*0.25))
+end
+
+part pal_se b rs rl ls ll aw sw
+  let hx = round($aw*0.9)
+  let hy = round($aw*0.45)
+  draw cape 22 36 (21+$b) 16 34 50 $sw 1
+  draw stride 37 (34+$b) 37 51 $ls $ll 0.9 0.45 1 se
+  draw stride 28 (36+$b) 28 54 $rs $rl 0.9 0.45 0 se
+  draw body_se $b
+  draw tabbot_se $b $sw
+  draw arm 22 (22+$b) (22+round($hx/2)) (29+$b+round($hy/2)) (22+$hx) (34+$b+$hy) 0 er=1
+  draw mace (22+$hx) (36+$b+$hy) (24+$hx) (44+$b+$hy)
+  draw fist (22+$hx) (34+$b+$hy) 0
+  draw shield_se (39-round($aw*0.4)) (19+$b-round($aw*0.2))
+end
+
+part pal_e b rs rl ls ll aw sw
+  draw cape 24 30 (18+$b) 18 29 50 ($sw*2) 1 n=2
+  draw stride 32 (35+$b) 32 53 $ls $ll 1 0 1 e
+  draw stride 31 (36+$b) 31 54 $rs $rl 1 0 0 e
+  draw body_e $b
+  draw tabbot_e $b $sw
+  draw shield_e (37-round($aw*0.3)) (20+$b)
+  draw arm 29 (23+$b) (29+round($aw/2)) (29+$b) (30+$aw) (34+$b) 0 el=1 er=1
+  draw mace (30+$aw) (36+$b) (36+$aw) (42+$b)
+  draw fist (30+$aw) (34+$b) 0
+end
+
+part pal_ne b rs rl ls ll aw sw
+  let hx = round($aw*0.6)
+  let hy = round(-$aw*0.3)
+  draw shield_ne (18-round($aw*0.3)) (20+$b+round($aw*0.2))
+  draw stride 28 (34+$b) 28 51 $ls $ll 0.9 -0.45 1 ne
+  draw stride 37 (36+$b) 37 54 $rs $rl 0.9 -0.45 0 ne
+  draw body_ne $b
+  draw arm 23 (21+$b) 22 (27+$b) 21 (31+$b) 1 er=1
+  draw fist 21 (31+$b) 1
+  draw cape 23 35 (20+$b) 17 37 46 $sw 1
+  draw arm 41 (22+$b) (41+round($hx/2)) (29+$b+round($hy/2)) (41+$hx) (34+$b+$hy) 0 el=1
+  draw mace (41+$hx) (36+$b+$hy) (44+$hx) (43+$b+$hy)
+  draw fist (41+$hx) (34+$b+$hy) 0
+end
+
+part pal_n b rs rl ls ll aw sw
+  let hy = round(-$aw*0.5)
+  draw shield_n 13 (19+$b+round($aw*0.25))
+  draw stride 27 (36+$b) 27 53 $ls $ll 0 -0.5 0 n
+  draw stride 37 (36+$b) 37 53 $rs $rl 0 -0.5 1 n
+  draw body_n $b
+  draw arm 21 (22+$b) 20 (28+$b) 19 (32+$b) 0 er=1
+  draw fist 19 (32+$b) 0
+  draw arm 43 (22+$b) 43 (29+$b+round($hy/2)) 43 (34+$b+$hy) 1 el=1
+  draw mace 43 (35+$b+$hy) 44 (42+$b+$hy)
+  draw fist 43 (34+$b+$hy) 1
+  draw cape 27 37 (20+$b) 21 43 46 $sw 1
+end
+
+# selout outline, then the flat 2:1 floor shadow under the feet (behind the figure)
+part finish
+  outline void
+  only empty
+    oval 32 56 12 4 void
+  end
+end
+
+# relight a mirrored figure: its baked rim light now sits on the right edge, sink
+# that edge one step (finish then lifts the left edge with the shared tl rim)
+part relight
+  rim dir=r steps=-1
+end
+
+# figure without outline: one drawn direction plus one row of the pose table
+part fig d b rs rl ls ll aw sw
+  draw pal_$d $b $rs $rl $ls $ll $aw $sw
+end
+
+# mirrored figure: sw = se, w = e, nw = ne flipped around x = 63 - x, then relit
+part figm d b rs rl ls ll aw sw
+  group flipx=63
+    draw pal_$d $b $rs $rl $ls $ll $aw $sw
+  end
+  draw relight
+end
+
+# whole sprite frames (transparent background)
+part pal d b rs rl ls ll aw sw
+  draw fig $d $b $rs $rl $ls $ll $aw $sw
+  draw finish
+end
+part palm d b rs rl ls ll aw sw
+  draw figm $d $b $rs $rl $ls $ll $aw $sw
+  draw finish
+end

@@ -1,0 +1,112 @@
+# showcase: the paladin walking in all 8 directions in sync on a dark iso floor
+# canvas  : 256x128 = 4x2 cells of 64x64 (row 0: s sw w nw, row 1: n ne e se)
+# floor   : 32x16 flagstones with grout gaps, torch-lit centre, dark edges,
+#           soft 2:1 shadows that darken the floor under each figure
+# order   : figures -> selout outline -> floor painted behind (only empty) -> floor light
+# frames  : the 8 walk poses of paladin.xel (110 / 90 ms)
+
+canvas 256x128
+light tl
+name "paladin showcase"
+include "paladin-parts.xel"
+lint maxcolors=32
+lint orphans=off
+lint motion=off
+
+# 8 figures, one pose row
+part cells b rs rl ls ll aw sw
+  draw fig s $b $rs $rl $ls $ll $aw $sw
+  group dx=64
+    draw figm se $b $rs $rl $ls $ll $aw $sw
+  end
+  group dx=128
+    draw figm e $b $rs $rl $ls $ll $aw $sw
+  end
+  group dx=192
+    draw figm ne $b $rs $rl $ls $ll $aw $sw
+  end
+  group dy=64
+    draw fig n $b $rs $rl $ls $ll $aw $sw
+  end
+  group dx=64 dy=64
+    draw fig ne $b $rs $rl $ls $ll $aw $sw
+  end
+  group dx=128 dy=64
+    draw fig e $b $rs $rl $ls $ll $aw $sw
+  end
+  group dx=192 dy=64
+    draw fig se $b $rs $rl $ls $ll $aw $sw
+  end
+end
+
+# flagstones: brighter toward the centre, one tone of variation per tile
+part floor
+  isogrid 128 -64 32 16
+  repeat 16 as gy
+    repeat 16 as gx
+      let tx = ($gx - $gy) * 16
+      let ty = ($gx + $gy) * 8 - 120
+      let d = sqrt(($tx / 128) * ($tx / 128) + ($ty / 70) * ($ty / 70))
+      let v = if(($gx * 7 + $gy * 3) % 5 == 0, 1, 0)
+      let c = clamp(if($d < 0.5, 2, 1) + if($d < 0.25, 1, 0) - $v, 1, 3)
+      isotile ($gx + 0.04) ($gy + 0.04) stone.$c w=0.92 d=0.92
+    end
+  end
+  # grout between the stones
+  bg stone.0
+end
+
+# darken only floor pixels (stone ramp): a void contact core, then one step
+# darker around it (darkest step first so nothing shifts twice)
+part floorshade cx cy rx ry
+  repeat 5 as k
+    only color stone.$k
+      oval $cx $cy ($rx-3) ($ry-2) void
+    end
+  end
+  repeat 4 as k from=1
+    only color stone.$k
+      shade $cx $cy $rx $ry steps=1 hard=true
+    end
+  end
+end
+
+part scene b rs rl ls ll aw sw
+  draw cells $b $rs $rl $ls $ll $aw $sw
+  outline selout ink=void
+  only empty
+    draw floor
+  end
+  repeat 4 as k
+    draw floorshade (32 + 64 * $k) 56 13 5
+    draw floorshade (32 + 64 * $k) 120 13 5
+  end
+end
+
+frame show_0 dur=110
+  draw scene 0 5 0 -5 0 -4 -1
+end
+frame show_1 dur=110
+  draw scene 1 3 0 -4 1 -3 -1
+end
+frame show_2 dur=90
+  draw scene 0 0 0 0 3 0 -1
+end
+frame show_3 dur=90
+  draw scene -1 -3 0 3 2 3 0
+end
+frame show_4 dur=110
+  draw scene 0 -5 0 5 0 4 1
+end
+frame show_5 dur=110
+  draw scene 1 -4 1 3 0 3 1
+end
+frame show_6 dur=90
+  draw scene 0 0 3 0 0 0 1
+end
+frame show_7 dur=90
+  draw scene -1 3 2 -3 0 -3 0
+end
+tag walk 0 7
+
+export gif paladin-showcase.gif tag=walk scale=2

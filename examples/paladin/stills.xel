@@ -1,0 +1,20 @@
+# review file: idle pose of the five drawn directions, one per frame
+# view with: node xel.js examples/paladin/stills.xel --sheet /tmp/s.png --cols 5 --scale 4
+canvas 64x64
+light tl
+include "paladin-parts.xel"
+frame s
+  draw pal s 0 3 0 -3 0 0 0
+end
+frame se
+  draw pal se 0 3 0 -3 0 0 0
+end
+frame e
+  draw pal e 0 3 0 -3 0 0 0
+end
+frame ne
+  draw pal ne 0 3 0 -3 0 0 0
+end
+frame n
+  draw pal n 0 3 0 -3 0 0 0
+end

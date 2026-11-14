@@ -1,0 +1,416 @@
+# paladin: heavy armored paladin, isometric dark fantasy (diablo ii flavoured)
+# canvas  : 64x64 per frame, transparent, feet anchor x=32 y=56, figure 48 px tall
+# palette : dark-fantasy steel, gold, blood + void shadow (see paladin-parts.xel)
+# light   : top-left. sw, w, nw are se, e, ne mirrored, then relit (part relight)
+# frames  : walk 8 per direction (contact and down 110 ms, passing and up 90 ms),
+#           idle 5 per direction at 180-260 ms
+# tags    : walk_s walk_sw walk_w walk_nw walk_n walk_ne walk_e walk_se,
+#           idle_s ... idle_se (same order)
+#
+# walk pose table (shared by every direction, right leg leads in frame 0)
+#   frame      b   rs  rl   ls  ll   aw  sw   dur  notes
+#   0 contact  0   5   0   -5   0   -4  -1   110  right heel down, left toe behind
+#   1 down     1   3   0   -4   1   -3  -1   110  weight lands, body sinks
+#   2 passing  0   0   0    0   3    0  -1    90  left leg swings under the body
+#   3 up      -1  -3   0    3   2    3   0    90  body rises over the right foot
+#   4 contact  0  -5   0    5   0    4   1   110  mirror of frame 0
+#   5 down     1  -4   1    3   0    3   1   110
+#   6 passing  0   0   3    0   0    0   1    90
+#   7 up      -1   3   2   -3   0   -3   0    90
+#   b bob, rs/ls stride along the walking direction, rl/ll foot lift,
+#   aw weapon arm swing (shield arm swings at a quarter), sw cape/hem sway (lags)
+#
+# idle pose table: stance rs=3 ls=-3, slow breath (shoulders rise 1 px),
+# cape sway and a small weapon shift
+#   frame  b   aw  sw  dur
+#   0      0   0   0   220
+#   1      0   0   1   180
+#   2     -1   1   1   240   breath in: shoulders and helm 1 px up, mace shifts
+#   3     -1   1   0   200
+#   4      0   0  -1   260   breath out, cape swings back
+
+canvas 64x64
+light tl
+name "paladin"
+include "paladin-parts.xel"
+lint maxcolors=24
+lint orphans=glint     # specular glints on the plate are single pixels on purpose
+
+# ---------- walk s ----------
+frame walk_s_0 dur=110
+  draw pal s 0 5 0 -5 0 -4 -1
+end
+frame walk_s_1 dur=110
+  draw pal s 1 3 0 -4 1 -3 -1
+end
+frame walk_s_2 dur=90
+  draw pal s 0 0 0 0 3 0 -1
+end
+frame walk_s_3 dur=90
+  draw pal s -1 -3 0 3 2 3 0
+end
+frame walk_s_4 dur=110
+  draw pal s 0 -5 0 5 0 4 1
+end
+frame walk_s_5 dur=110
+  draw pal s 1 -4 1 3 0 3 1
+end
+frame walk_s_6 dur=90
+  draw pal s 0 0 3 0 0 0 1
+end
+frame walk_s_7 dur=90
+  draw pal s -1 3 2 -3 0 -3 0
+end
+tag walk_s 0 7
+
+# ---------- walk sw ----------
+frame walk_sw_0 dur=110
+  draw palm se 0 5 0 -5 0 -4 -1
+end
+frame walk_sw_1 dur=110
+  draw palm se 1 3 0 -4 1 -3 -1
+end
+frame walk_sw_2 dur=90
+  draw palm se 0 0 0 0 3 0 -1
+end
+frame walk_sw_3 dur=90
+  draw palm se -1 -3 0 3 2 3 0
+end
+frame walk_sw_4 dur=110
+  draw palm se 0 -5 0 5 0 4 1
+end
+frame walk_sw_5 dur=110
+  draw palm se 1 -4 1 3 0 3 1
+end
+frame walk_sw_6 dur=90
+  draw palm se 0 0 3 0 0 0 1
+end
+frame walk_sw_7 dur=90
+  draw palm se -1 3 2 -3 0 -3 0
+end
+tag walk_sw 8 15
+
+# ---------- walk w ----------
+frame walk_w_0 dur=110
+  draw palm e 0 5 0 -5 0 -4 -1
+end
+frame walk_w_1 dur=110
+  draw palm e 1 3 0 -4 1 -3 -1
+end
+frame walk_w_2 dur=90
+  draw palm e 0 0 0 0 3 0 -1
+end
+frame walk_w_3 dur=90
+  draw palm e -1 -3 0 3 2 3 0
+end
+frame walk_w_4 dur=110
+  draw palm e 0 -5 0 5 0 4 1
+end
+frame walk_w_5 dur=110
+  draw palm e 1 -4 1 3 0 3 1
+end
+frame walk_w_6 dur=90
+  draw palm e 0 0 3 0 0 0 1
+end
+frame walk_w_7 dur=90
+  draw palm e -1 3 2 -3 0 -3 0
+end
+tag walk_w 16 23
+
+# ---------- walk nw ----------
+frame walk_nw_0 dur=110
+  draw palm ne 0 5 0 -5 0 -4 -1
+end
+frame walk_nw_1 dur=110
+  draw palm ne 1 3 0 -4 1 -3 -1
+end
+frame walk_nw_2 dur=90
+  draw palm ne 0 0 0 0 3 0 -1
+end
+frame walk_nw_3 dur=90
+  draw palm ne -1 -3 0 3 2 3 0
+end
+frame walk_nw_4 dur=110
+  draw palm ne 0 -5 0 5 0 4 1
+end
+frame walk_nw_5 dur=110
+  draw palm ne 1 -4 1 3 0 3 1
+end
+frame walk_nw_6 dur=90
+  draw palm ne 0 0 3 0 0 0 1
+end
+frame walk_nw_7 dur=90
+  draw palm ne -1 3 2 -3 0 -3 0
+end
+tag walk_nw 24 31
+
+# ---------- walk n ----------
+frame walk_n_0 dur=110
+  draw pal n 0 5 0 -5 0 -4 -1
+end
+frame walk_n_1 dur=110
+  draw pal n 1 3 0 -4 1 -3 -1
+end
+frame walk_n_2 dur=90
+  draw pal n 0 0 0 0 3 0 -1
+end
+frame walk_n_3 dur=90
+  draw pal n -1 -3 0 3 2 3 0
+end
+frame walk_n_4 dur=110
+  draw pal n 0 -5 0 5 0 4 1
+end
+frame walk_n_5 dur=110
+  draw pal n 1 -4 1 3 0 3 1
+end
+frame walk_n_6 dur=90
+  draw pal n 0 0 3 0 0 0 1
+end
+frame walk_n_7 dur=90
+  draw pal n -1 3 2 -3 0 -3 0
+end
+tag walk_n 32 39
+
+# ---------- walk ne ----------
+frame walk_ne_0 dur=110
+  draw pal ne 0 5 0 -5 0 -4 -1
+end
+frame walk_ne_1 dur=110
+  draw pal ne 1 3 0 -4 1 -3 -1
+end
+frame walk_ne_2 dur=90
+  draw pal ne 0 0 0 0 3 0 -1
+end
+frame walk_ne_3 dur=90
+  draw pal ne -1 -3 0 3 2 3 0
+end
+frame walk_ne_4 dur=110
+  draw pal ne 0 -5 0 5 0 4 1
+end
+frame walk_ne_5 dur=110
+  draw pal ne 1 -4 1 3 0 3 1
+end
+frame walk_ne_6 dur=90
+  draw pal ne 0 0 3 0 0 0 1
+end
+frame walk_ne_7 dur=90
+  draw pal ne -1 3 2 -3 0 -3 0
+end
+tag walk_ne 40 47
+
+# ---------- walk e ----------
+frame walk_e_0 dur=110
+  draw pal e 0 5 0 -5 0 -4 -1
+end
+frame walk_e_1 dur=110
+  draw pal e 1 3 0 -4 1 -3 -1
+end
+frame walk_e_2 dur=90
+  draw pal e 0 0 0 0 3 0 -1
+end
+frame walk_e_3 dur=90
+  draw pal e -1 -3 0 3 2 3 0
+end
+frame walk_e_4 dur=110
+  draw pal e 0 -5 0 5 0 4 1
+end
+frame walk_e_5 dur=110
+  draw pal e 1 -4 1 3 0 3 1
+end
+frame walk_e_6 dur=90
+  draw pal e 0 0 3 0 0 0 1
+end
+frame walk_e_7 dur=90
+  draw pal e -1 3 2 -3 0 -3 0
+end
+tag walk_e 48 55
+
+# ---------- walk se ----------
+frame walk_se_0 dur=110
+  draw pal se 0 5 0 -5 0 -4 -1
+end
+frame walk_se_1 dur=110
+  draw pal se 1 3 0 -4 1 -3 -1
+end
+frame walk_se_2 dur=90
+  draw pal se 0 0 0 0 3 0 -1
+end
+frame walk_se_3 dur=90
+  draw pal se -1 -3 0 3 2 3 0
+end
+frame walk_se_4 dur=110
+  draw pal se 0 -5 0 5 0 4 1
+end
+frame walk_se_5 dur=110
+  draw pal se 1 -4 1 3 0 3 1
+end
+frame walk_se_6 dur=90
+  draw pal se 0 0 3 0 0 0 1
+end
+frame walk_se_7 dur=90
+  draw pal se -1 3 2 -3 0 -3 0
+end
+tag walk_se 56 63
+
+# ---------- idle s ----------
+frame idle_s_0 dur=220
+  draw pal s 0 3 0 -3 0 0 0
+end
+frame idle_s_1 dur=180
+  draw pal s 0 3 0 -3 0 0 1
+end
+frame idle_s_2 dur=240
+  draw pal s -1 3 0 -3 0 1 1
+end
+frame idle_s_3 dur=200
+  draw pal s -1 3 0 -3 0 1 0
+end
+frame idle_s_4 dur=260
+  draw pal s 0 3 0 -3 0 0 -1
+end
+tag idle_s 64 68
+
+# ---------- idle sw ----------
+frame idle_sw_0 dur=220
+  draw palm se 0 3 0 -3 0 0 0
+end
+frame idle_sw_1 dur=180
+  draw palm se 0 3 0 -3 0 0 1
+end
+frame idle_sw_2 dur=240
+  draw palm se -1 3 0 -3 0 1 1
+end
+frame idle_sw_3 dur=200
+  draw palm se -1 3 0 -3 0 1 0
+end
+frame idle_sw_4 dur=260
+  draw palm se 0 3 0 -3 0 0 -1
+end
+tag idle_sw 69 73
+
+# ---------- idle w ----------
+frame idle_w_0 dur=220
+  draw palm e 0 3 0 -3 0 0 0
+end
+frame idle_w_1 dur=180
+  draw palm e 0 3 0 -3 0 0 1
+end
+frame idle_w_2 dur=240
+  draw palm e -1 3 0 -3 0 1 1
+end
+frame idle_w_3 dur=200
+  draw palm e -1 3 0 -3 0 1 0
+end
+frame idle_w_4 dur=260
+  draw palm e 0 3 0 -3 0 0 -1
+end
+tag idle_w 74 78
+
+# ---------- idle nw ----------
+frame idle_nw_0 dur=220
+  draw palm ne 0 3 0 -3 0 0 0
+end
+frame idle_nw_1 dur=180
+  draw palm ne 0 3 0 -3 0 0 1
+end
+frame idle_nw_2 dur=240
+  draw palm ne -1 3 0 -3 0 1 1
+end
+frame idle_nw_3 dur=200
+  draw palm ne -1 3 0 -3 0 1 0
+end
+frame idle_nw_4 dur=260
+  draw palm ne 0 3 0 -3 0 0 -1
+end
+tag idle_nw 79 83
+
+# ---------- idle n ----------
+frame idle_n_0 dur=220
+  draw pal n 0 3 0 -3 0 0 0
+end
+frame idle_n_1 dur=180
+  draw pal n 0 3 0 -3 0 0 1
+end
+frame idle_n_2 dur=240
+  draw pal n -1 3 0 -3 0 1 1
+end
+frame idle_n_3 dur=200
+  draw pal n -1 3 0 -3 0 1 0
+end
+frame idle_n_4 dur=260
+  draw pal n 0 3 0 -3 0 0 -1
+end
+tag idle_n 84 88
+
+# ---------- idle ne ----------
+frame idle_ne_0 dur=220
+  draw pal ne 0 3 0 -3 0 0 0
+end
+frame idle_ne_1 dur=180
+  draw pal ne 0 3 0 -3 0 0 1
+end
+frame idle_ne_2 dur=240
+  draw pal ne -1 3 0 -3 0 1 1
+end
+frame idle_ne_3 dur=200
+  draw pal ne -1 3 0 -3 0 1 0
+end
+frame idle_ne_4 dur=260
+  draw pal ne 0 3 0 -3 0 0 -1
+end
+tag idle_ne 89 93
+
+# ---------- idle e ----------
+frame idle_e_0 dur=220
+  draw pal e 0 3 0 -3 0 0 0
+end
+frame idle_e_1 dur=180
+  draw pal e 0 3 0 -3 0 0 1
+end
+frame idle_e_2 dur=240
+  draw pal e -1 3 0 -3 0 1 1
+end
+frame idle_e_3 dur=200
+  draw pal e -1 3 0 -3 0 1 0
+end
+frame idle_e_4 dur=260
+  draw pal e 0 3 0 -3 0 0 -1
+end
+tag idle_e 94 98
+
+# ---------- idle se ----------
+frame idle_se_0 dur=220
+  draw pal se 0 3 0 -3 0 0 0
+end
+frame idle_se_1 dur=180
+  draw pal se 0 3 0 -3 0 0 1
+end
+frame idle_se_2 dur=240
+  draw pal se -1 3 0 -3 0 1 1
+end
+frame idle_se_3 dur=200
+  draw pal se -1 3 0 -3 0 1 0
+end
+frame idle_se_4 dur=260
+  draw pal se 0 3 0 -3 0 0 -1
+end
+tag idle_se 99 103
+
+export sheet walk-sheet.png rows=walk_s,walk_sw,walk_w,walk_nw,walk_n,walk_ne,walk_e,walk_se scale=2
+export sheet idle-sheet.png rows=idle_s,idle_sw,idle_w,idle_nw,idle_n,idle_ne,idle_e,idle_se scale=2
+export gif walk-s.gif tag=walk_s scale=3
+export gif walk-sw.gif tag=walk_sw scale=3
+export gif walk-w.gif tag=walk_w scale=3
+export gif walk-nw.gif tag=walk_nw scale=3
+export gif walk-n.gif tag=walk_n scale=3
+export gif walk-ne.gif tag=walk_ne scale=3
+export gif walk-e.gif tag=walk_e scale=3
+export gif walk-se.gif tag=walk_se scale=3
+export gif idle-s.gif tag=idle_s scale=3
+export gif idle-sw.gif tag=idle_sw scale=3
+export gif idle-w.gif tag=idle_w scale=3
+export gif idle-nw.gif tag=idle_nw scale=3
+export gif idle-n.gif tag=idle_n scale=3
+export gif idle-ne.gif tag=idle_ne scale=3
+export gif idle-e.gif tag=idle_e scale=3
+export gif idle-se.gif tag=idle_se scale=3
