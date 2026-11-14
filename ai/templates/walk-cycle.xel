@@ -1,0 +1,122 @@
+# template: side-view walk cycle + idle, built from parts
+# subject : simple adventurer, facing right
+# canvas  : 32x32 per frame
+# palette : skin, tunic, pants, boots ramps + ink
+# light   : top-left
+# frames  : walk = contact, down, passing, up (x2 mirrored legs) = 8 frames
+#           idle = 4 frames of breathing (1px bob, arms follow late)
+#
+# the trick: every body element is a part with an offset parameter.
+# frames only change offsets, so proportions can never drift ("boiling").
+
+canvas 32x32
+light tl
+ramp skin  auto base=#c98a62 steps=4 hue=12
+ramp tunic auto base=#3f7a4a steps=4 hue=16
+ramp pants auto base=#5a4a3a steps=4 hue=10
+ramp boots auto base=#4a3428 steps=3 hue=10
+color ink #14101a
+lint orphans=ink,skin.2     # eyes and hands are 1px on purpose
+
+# ---------- parts ----------
+# head at (x,y) = top-left of the head box
+part head x y
+  box $x $y 6 6 skin.2
+  box ($x+0) ($y+0) 6 2 #3a2a20        # hair
+  px ($x+0) ($y+2) #3a2a20
+  px ($x+4) ($y+3) ink                 # eye, facing right
+  box ($x+0) ($y+4) 2 2 skin.1         # jaw shadow (back of head)
+end
+
+part torso x y
+  box $x $y 6 7 tunic.2
+  box ($x+0) $y 2 7 tunic.1            # back side in shadow
+  hline $x ($y+5) 6 pants.2            # belt
+end
+
+# leg from the hip (hx,hy) to the foot (fx,fy). c = ramp step for the leg
+part leg hx hy fx fy c
+  line $hx $hy $fx ($fy-1) $c
+  line ($hx+1) $hy ($fx+1) ($fy-1) $c
+  hline $fx $fy 3 boots.1
+end
+
+part arm sx sy hx hy c
+  line $sx $sy $hx $hy $c
+  px $hx ($hy+1) skin.2
+end
+
+# a full pose: body bob b, near leg foot (nfx,nfy), far leg foot (ffx,ffy),
+# near hand (nhx,nhy), far hand (fhx,fhy)
+part pose b nfx nfy ffx ffy nhx nhy fhx fhy
+  draw arm 15 (14+$b) $fhx ($fhy+$b) tunic.0
+  draw leg 14 (21+$b) $ffx $ffy pants.1
+  draw torso 13 (14+$b)
+  draw leg 15 (21+$b) $nfx $nfy pants.2
+  draw head 13 (8+$b)
+  draw arm 16 (15+$b) $nhx ($nhy+$b) tunic.2
+end
+
+# ---------- walk: 8 frames ----------
+# contact: legs spread, body neutral
+frame walk_contact_a dur=110
+  draw pose 0  18 28  10 28  12 19  19 19
+  outline selout
+end
+# down: weight lands, body sinks 1px
+frame walk_down_a dur=110
+  draw pose 1  17 28  11 27  13 20  18 20
+  outline selout
+end
+# passing: back leg swings under the body
+frame walk_pass_a dur=110
+  draw pose 0  15 28  14 26  15 21  16 21
+  outline selout
+end
+# up: body rises 1px over the planted foot
+frame walk_up_a dur=110
+  draw pose -1 13 28  17 27  17 20  14 20
+  outline selout
+end
+# second half: same poses with the legs and arms swapped
+frame walk_contact_b dur=110
+  draw pose 0  10 28  18 28  19 19  12 19
+  outline selout
+end
+frame walk_down_b dur=110
+  draw pose 1  11 27  17 28  18 20  13 20
+  outline selout
+end
+frame walk_pass_b dur=110
+  draw pose 0  14 26  15 28  16 21  15 21
+  outline selout
+end
+frame walk_up_b dur=110
+  draw pose -1 17 27  13 28  14 20  17 20
+  outline selout
+end
+
+# ---------- idle: 4 frames ----------
+frame idle_0 dur=220
+  draw pose 0  16 28  12 28  16 21  15 21
+  outline selout
+end
+frame idle_1 dur=180
+  draw pose 1  16 28  12 28  16 21  15 21
+  outline selout
+end
+frame idle_2 dur=220
+  draw pose 1  16 28  12 28  16 22  15 22
+  outline selout
+end
+frame idle_3 dur=180
+  draw pose 0  16 28  12 28  16 22  15 22
+  outline selout
+end
+
+tag walk 0 7
+tag idle 8 11
+
+export gif walk.gif tag=walk scale=4
+export gif idle.gif tag=idle scale=4
+export sheet sheet.png cols=8 scale=2

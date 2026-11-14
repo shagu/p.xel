@@ -1,0 +1,86 @@
+# template: static 32x32 character
+# subject : armored knight, front view
+# canvas  : 32x32, transparent background
+# palette : 3 ramps (metal, cloth, skin) + ink, budget 14 colors
+# light   : top-left
+# passes  : 1 silhouette, 2 flats, 3 shading, 4 details, 5 outline + polish
+#
+# workflow: after every pass run
+#   node xel.js ai/templates/sprite.xel --ascii mask   (pass 1)
+#   node xel.js ai/templates/sprite.xel --ascii        (later passes)
+#   node xel.js ai/templates/sprite.xel --lint
+
+canvas 32x32
+light tl
+
+ramp metal auto base=#7a8296 steps=5 hue=8
+ramp cloth auto base=#a33a3a steps=4 hue=14
+ramp skin  auto base=#c98a62 steps=4 hue=12
+color ink #12101a
+
+map
+  o ink
+  m metal.1
+  M metal.2
+  L metal.3
+  W metal.4
+  c cloth.1
+  C cloth.2
+  s skin.1
+  S skin.2
+end
+
+# --- pass 1 + 2: silhouette with flat base colors (read it with --ascii mask)
+# head and helmet: symmetric, so draw the left half and mirror
+art 10 3
+  .....MM
+  ...MMMM
+  ..MMMMM
+  ..MMMMM
+  ..MmmSS
+  ..MMSSS
+  ...MMMM
+end
+
+# torso, arms, belt
+art 7 10
+  ....MMMMMMMMM
+  ..MMMMMMMMMMMMM
+  .MMMMMMMMMMMMMMM
+  .MMM.MMMMMMM.MMM
+  .MM..CCCCCCC..MM
+  .MM..CCCCCCC..MM
+  .SS..mmmmmmm..SS
+  .....CCCCCCC
+  .....CCC.CCC
+end
+
+# legs
+art 12 19
+  MMM.MMM
+  MMM.MMM
+  MMM.MMM
+  MMM.MMM
+  mmm.mmm
+  mmm.mmm
+end
+
+mirror x 16
+
+# --- pass 3: shading from the top-left light (lit = left, shadow = right)
+only color metal.2
+  box 16 3 8 26 metal.1      # right half falls into shadow
+  box 8 10 4 6 metal.3       # lit shoulder
+end
+only color cloth.2
+  box 17 14 6 6 cloth.1
+end
+
+# --- pass 4: details (eye slit, plume, belt buckle)
+hline 13 7 6 ink
+px 15 11 metal.4
+px 16 16 metal.4
+lint orphans=metal.4
+
+# --- pass 5: outline + polish
+outline selout

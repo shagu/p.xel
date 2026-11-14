@@ -1,0 +1,55 @@
+# template: small isometric scene
+# subject : stone courtyard with a pillar, crate, torch and a grass border
+# canvas  : 128x96, transparent outside the floor
+# tiles   : 32x16 diamonds (2:1), blocks 8-24 px tall
+# palette : dark-fantasy builtin + an auto ramp for grass
+# light   : top-left (top faces lightest, left faces mid, right faces dark)
+# order   : floor (back to front) -> floor light pass -> blocks -> props
+# screen  : tile (gx,gy) top corner = (ox + (gx-gy)*16, oy + (gx+gy)*8)
+#           a block of height h on it has its top corner h px higher
+
+canvas 128x96
+light tl
+palette dark-fantasy
+ramp grass auto base=#3f5a2e steps=4 hue=14
+lint maxcolors=32
+
+isogrid 64 20 32 16
+
+# ---------- floor, back to front: gy outer, gx inner ----------
+repeat 4 as gy
+  repeat 4 as gx
+    isotile $gx $gy stone.2
+  end
+end
+# checker variation so the repeat does not read as wallpaper
+isotile 1 0 stone.3
+isotile 3 1 stone.3
+isotile 0 2 stone.3
+isotile 2 3 stone.3
+# grass border on the front-left row
+repeat 4 as k
+  isotile 0 $k grass.1
+end
+
+# ---------- floor light pass (before blocks, so walls stay clean) ----------
+# torch light pool: shift the floor one ramp step brighter, dithered falloff
+glow 84 48 26 13 steps=1
+
+# ---------- blocks: back to front ----------
+isobox 2 0 h=24 ramp=stone            # pillar
+isobox 2 0 h=4 lift=24 ramp=steel     # pillar cap
+isobox 3 2 h=10 ramp=gold             # crate (gold ramp reads as wood here)
+
+# ---------- props ----------
+# torch light also catches the pillar's left face
+glow 87 30 6 10 steps=1
+# torch on the pillar's left face (pillar tile 2,0: top corner 96,36, face x 80..95)
+vline 87 26 5 stone.0
+box 86 23 3 3 ember
+hline 87 22 1 gold.4
+px 87 24 gold.4
+lint orphans=gold.4
+
+
+export png scene.png scale=4

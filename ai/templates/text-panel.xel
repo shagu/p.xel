@@ -1,0 +1,30 @@
+# template: UI dialog panel with a title, body text and a dithered backdrop
+# canvas  : 128x48
+# palette : snes-soft
+# light   : top-left (panel bevel light on top/left, dark on bottom/right)
+
+canvas 128x48
+light tl
+palette snes-soft
+lint orphans=white
+
+# backdrop: two-color bayer gradient, large area so dithering is allowed
+gradient 0 0 128 48 ramp=robe dir=v dither=bayer4
+
+# panel body with bevel
+box 6 8 116 34 robe.0
+hline 6 8 116 robe.2
+vline 6 8 34 robe.2
+hline 6 41 116 ink
+vline 121 8 34 ink
+rect 8 10 112 30 robe.1
+
+# title tab
+box 10 2 52 11 ink
+box 11 3 50 9 accent
+text 36 4 "NOTICE" ink font=5x7 align=center
+
+# body text, 2 px line gap
+text 14 16 "xel turns text" white
+text 14 25 "into pixel art." white
+text 115 33 "A" accent font=3x5

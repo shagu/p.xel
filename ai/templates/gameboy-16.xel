@@ -1,0 +1,75 @@
+# template: 16x16 Game Boy overworld character, 4 colors, front view
+# subject : capped kid (generic), facing down
+# palette : gameboy (gb.0 darkest .. gb.3 lightest). gb.3 doubles as skin/highlight
+# rules   : 2 heads tall: head rows 0-8, body rows 9-15, 1px darkest outline,
+#           eyes 1x2 dark pixels, no mouth at this size
+# method  : draw the symmetric upper body as a left half and mirror it,
+#           then draw the legs per frame (they are not symmetric in a step)
+# frames  : stand, step-left, stand, step-right (classic 4-beat overworld walk);
+#           on step frames the upper body sinks 1px (body bob), the planted foot stays
+
+canvas 16x16
+palette gameboy
+lint orphans=gb.0,gb.2     # eyes and buttons are single pixels on purpose
+
+map
+  o gb.0
+  d gb.1
+  l gb.2
+  w gb.3
+end
+
+# upper body at vertical offset b (0 = standing, 1 = sunk on a step)
+part upper b
+  group dy=$b
+    art 0 0
+      ....oooo
+      ...odddd
+      ..oddddd
+      ..oddddd
+      ..oooooo
+      ..owwwww
+      ..owwoww
+      ..owwoww
+      ...owwww
+      ..oooddd
+      .owoddld
+      .owodddd
+      ..oooddd
+    end
+  end
+  mirror x 8
+  px 6 (2+$b) gb.3      # cap shine, off-center toward the light
+  px 7 (2+$b) gb.3
+end
+
+frame stand dur=220
+  draw upper 0
+  art 4 13
+    olloollo
+    olloollo
+    oooooooo
+  end
+end
+
+frame step_l dur=220
+  draw upper 1
+  art 4 14
+    ooooollo
+    ....oooo
+  end
+end
+
+frame stand_b dur=220 from=stand
+end
+
+frame step_r dur=220
+  draw upper 1
+  art 4 14
+    ollooooo
+    oooo....
+  end
+end
+
+tag walk_down 0 3
+export gif walk-down.gif tag=walk_down scale=6
