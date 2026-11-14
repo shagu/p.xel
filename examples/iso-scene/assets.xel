@@ -1,0 +1,76 @@
+# sprite sheet: every asset of the ruined shrine scene, one 80x96 cell each
+# anchor : the asset's tile top corner sits at (40,64) in every cell
+#          (the 2x2 shrine uses (40,44)); floor tiles are shown alone
+# order  : floor tiles, walls, props, shrine, characters (5 columns)
+# export : assets-sheet.png, scale 3, transparent background
+
+canvas 80x96
+include "palette-and-parts.xel"
+lint maxcolors=64
+lint orphans=fire.4,spirit.2
+
+frame grass
+  draw t_grass 40 64
+end
+frame grass2
+  draw t_grass2 40 64
+end
+frame dirt
+  draw t_dirt 40 64
+end
+frame flagstone
+  draw t_flag 40 64
+end
+frame water
+  draw t_water 40 64
+end
+frame wall_gx
+  draw wall 40 64 1 7 24 brick.3 brick.2
+end
+frame wall_gy
+  draw wall 40 64 -1 7 24 brick.2 brick.1
+end
+frame crate
+  draw crate 40 64
+end
+frame barrel
+  draw barrel 40 64
+end
+frame pillar
+  draw pillar 40 64
+end
+frame tree
+  draw tree 40 64
+end
+frame rock
+  draw rock 40 64
+end
+frame bush
+  draw bush 40 64
+end
+frame grave
+  draw grave 40 64
+end
+frame fence_gx
+  draw fence 40 64 1 wood.3 wood.2
+end
+frame fence_gy
+  draw fence 40 64 -1 wood.2 wood.1
+end
+frame brazier
+  draw brazier 40 64 fire_a
+end
+frame well
+  draw well 40 64
+end
+frame shrine
+  draw shrine 40 44
+end
+frame guard
+  draw guard 40 64
+end
+frame villager
+  draw villager 40 64
+end
+
+export sheet assets-sheet.png cols=7 scale=3

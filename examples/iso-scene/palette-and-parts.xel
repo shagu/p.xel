@@ -1,0 +1,596 @@
+# shared palette, maps and parts for the ruined shrine at dusk
+# no canvas, no frames here: assets.xel and scene.xel include this file
+#
+# projection: strict 2:1, floor tile 32x16 (diamond rows 2,6,..30,30,..2 wide)
+# light     : tl (dusk sun from the top-left), warm local light from braziers
+# anchor    : every prop part takes (x, y) = screen pixel of its tile's top corner,
+#             the same point isogrid uses as ox,oy for tile 0,0
+#             diamond row i (0..7) spans x-1-2i .. x+2i, rows 8..15 mirror it
+#             tile center = (x, y+8), tile bottom corner = (x, y+15)
+# sub boxes : a box of width w centered on a tile: isogrid x (y+(32-w)/4) w w/2
+# cells     : prism helper chains 8x4 boxes, one cell = quarter tile,
+#             a step = (+4,+2) along gx, b step = (-4,+2) along gy
+#
+# assets (21): grass, grass2, dirt, flagstone, water, wall gx/gy, crate, barrel, pillar,
+#              dead tree, rock, bush, grave, fence gx/gy, brazier, well, shrine, guard, villager
+
+light tl
+
+# hand made ramps, dark to light, cool shadows and warm tops (firelight lifts
+# floors two steps toward the warm end). floors use 6 steps for glow/shade room
+ramp grass #0e140e #1a2416 #263220 #34422a #4a5530 #6a6c3a
+ramp dirt  #1a1210 #2c1f18 #3e2c20 #54402c #6e5636 #8e7244
+ramp stone #141319 #22212b #33323e #4a4955 #6e6050 #9a7e5c
+ramp brick #18141a #28222a #3a3238 #524640 #6c5e52 #8c7c66
+ramp wood  #1e120e #33201a #4a3022 #63442c #7e5c38 #a07a4a
+ramp water #0a1018 #121e2c #1c3040 #2a4656 #466a74 #7a9c98
+ramp leaf  #101a10 #1c2a18 #2c3c22 #42522c #5e6a36
+ramp roof  #1e0e10 #361a1a #502622 #6c3a2c #8a5438
+ramp fire  #6a1c0c #b8401a #e8782a #ffb84a #fff0b0
+ramp cloth #2a0c10 #4e1618 #782420 #a03a28
+ramp skin  #3a2018 #6e4430 #a06a48 #c8946a
+ramp spirit #1e4a5a #3a9ab8 #a8f0ff
+ramp sky   #0b0a12 #15131f #211b2c
+color ink #0a090e
+
+map
+  g grass.1
+  h grass.2
+  G grass.3
+  H grass.4
+  d dirt.2
+  e dirt.3
+  D dirt.4
+  k stone.0
+  s stone.1
+  S stone.2
+  t stone.3
+  T stone.4
+  U stone.5
+  w water.1
+  x water.2
+  W water.3
+  v water.4
+  V water.5
+  o ink
+  1 brick.0
+  2 brick.1
+  3 brick.2
+  4 brick.3
+  5 brick.4
+  6 brick.5
+  b wood.0
+  n wood.1
+  N wood.2
+  m wood.3
+  M wood.4
+  P wood.5
+  l leaf.0
+  L leaf.1
+  q leaf.2
+  Q leaf.3
+  u leaf.4
+  f fire.0
+  F fire.1
+  y fire.2
+  Y fire.3
+  z fire.4
+  c cloth.0
+  C cloth.1
+  r cloth.2
+  R cloth.3
+  p skin.0
+  a skin.1
+  A skin.2
+  B skin.3
+  i spirit.0
+  I spirit.1
+  j spirit.2
+  7 moon.0
+  8 moon.1
+  9 moon.2
+  0 star
+end
+
+# ---------- helpers ----------
+
+# run: cnt overlapping boxes (tw wide) stepping 2 px along gx (dir=1) or gy (dir=-1).
+# overlap hides the 1 px side face seam that adjacent isoboxes leave
+part run x y cnt dir h r tw top
+  repeat $cnt as k
+    isogrid ($x+$k*2*$dir) ($y+$k) $tw ($tw/2)
+    isobox 0 0 ramp=$r h=$h top=$top
+  end
+end
+
+# ---------- floor tiles ----------
+# texture art is 32x16 anchored at (x-16, y), marks stay 1 px inside the diamond
+
+part t_grass x y
+  isogrid $x $y 32 16
+  isotile 0 0 grass.2
+  art ($x-16) $y
+    ................................
+    ................................
+    .............H..H...............
+    ..............HH................
+    ..............gg................
+    .........G..G...................
+    ..........GG........gg..........
+    .........ggg..........gg........
+    ................................
+    ......gg.........G.G............
+    ........gg........G.............
+    .................gg.............
+  end
+end
+
+part t_grass2 x y
+  isogrid $x $y 32 16
+  isotile 0 0 grass.2
+  art ($x-16) $y
+    ................................
+    ................................
+    ................................
+    ..............gg................
+    ................gg..............
+    ....................G..G........
+    .......G.G...........GG.........
+    ........G...........ggg.........
+    .......gg.......................
+    ................................
+    ...........H..H.................
+    ............HH...gg.............
+    ............gg.....gg...........
+  end
+end
+
+part t_dirt x y
+  isogrid $x $y 32 16
+  isotile 0 0 dirt.3
+  art ($x-16) $y
+    ................................
+    ................................
+    ................................
+    ...........dd...................
+    .............dd.................
+    ...............dd....DD.........
+    .....................dd.........
+    .....DD.........................
+    .....dd...........dd............
+    ....................dd..........
+    ...........DD.........dd........
+    ...........dd...................
+    ................................
+    ...............DD...............
+    ...............dd...............
+  end
+end
+
+part t_water x y
+  isogrid $x $y 32 16
+  isotile 0 0 water.2
+  art ($x-16) $y
+    ................................
+    ................................
+    ................................
+    ................................
+    ...........WWW..................
+    ................................
+    ................................
+    .................vvWWW..........
+    ......WW........................
+    ........WWW.....................
+    ................................
+    .............WWW................
+  end
+end
+
+
+# flagstones: 4 small diamonds on dark mortar, lit top-left edge, dark bottom-right
+part t_flag x y
+  isogrid $x $y 32 16
+  isotile 0 0 stone.1
+  repeat 2 as b
+    repeat 2 as a
+      isogrid ($x+($a-$b)*8) ($y+($a+$b)*4+1) 12 6
+      isotile 0 0 stone.3
+    end
+  end
+  art ($x-16) $y
+    ................................
+    ...............TT...............
+    .............TT.................
+    ................................
+    ................SS..............
+    .......TT..............TT.SS....
+    .....TT..............TT.........
+    ........SS..............SS......
+    ..........SS..............SS....
+    ...............TT...............
+    .............TT.................
+    ................................
+    ................SS..............
+    ..................SS............
+  end
+end
+
+# ---------- walls ----------
+# wall along the tile's back edge: dir=1 runs along gx (lit long face),
+# dir=-1 along gy (shaded long face). len=7 fits one tile, len=8 joins the next tile
+# face/mortar: brick.3/brick.2 for dir=1, brick.2/brick.1 for dir=-1
+# courses every 5 px follow the 2:1 ground line, joints staggered every 6 px
+part wall x y dir len h face mortar
+  draw run $x $y $len $dir $h brick 8 brick.4
+  # face bottom line starts at (x0, y+2) and climbs 1 px per 2 px toward the corner
+  let x0 = $x-3*$dir
+  only color $face
+    repeat 5 as c from=1
+      line $x0 ($y+2-$c*5) ($x0+(2*$len+3)*$dir) ($y+2-$c*5+$len+1) $mortar
+      repeat ($len/3+1) as i
+        let j = 2+$i*6+($c%2)*3
+        vline ($x0+$j*$dir) ($y+2+floor($j/2)-$c*5+1) 4 $mortar
+      end
+    end
+  end
+end
+
+# ---------- props ----------
+# temp color for silhouettes that a volume helper then repaints (never left over)
+color mask #ff00ff
+color star #b8b4c8
+ramp moon #6a6478 #b8ae96 #e6dcb8
+
+# crate: 16x8 footprint centered on the tile, 11 px tall, art from an isobox dump
+# top boards with seams along gx, framed faces with a diagonal brace
+part crate x y
+  art ($x-7) ($y-7)
+    ......PP......
+    ....PPPPPP....
+    ..PPPMMPPPPP..
+    PPMMPPPMMPPPPP
+    PPPPMMPPPMMPPP
+    MMPPPPMMPPPMNN
+    MmMMPPPPMMNNnN
+    MmmmMMPPNNnnnN
+    MmmmmmMNnnnnnN
+    MmmmmmMNNnnnnN
+    MmmmmMMNnNnnnN
+    MmmmMmMNnnNnnN
+    MmmMmmMNnnnNnN
+    MmMmmmMNnnnnNN
+    MMmmmmMNnnnnnN
+    MMmmmmMNnnnnNN
+    ..MMmmMNnnNN..
+    ....MMMNNN....
+    ......MN......
+  end
+end
+
+# barrel: 10 px wide, 15 px tall, standing on the tile center
+part barrel x y
+  ovalbox ($x-5) ($y+6) 10 5 mask
+  box ($x-5) ($y-3) 10 11 mask
+  only color mask
+    cylinder ($x-5) ($y-6) 10 18 ramp=wood
+  end
+  # lid with a darker inner disc
+  ovalbox ($x-5) ($y-6) 10 5 wood.4
+  ovalbox ($x-4) ($y-5) 8 3 wood.3
+  hline ($x-2) ($y-4) 4 wood.2
+  # iron hoops, curved like the bottom half of an ellipse
+  repeat 2 as k
+    let hy = $y-1+$k*7
+    hline ($x-3) $hy 6 stone.2
+    hline ($x-5) ($hy-1) 2 stone.3
+    hline ($x+3) ($hy-1) 2 stone.1
+    px ($x-3) $hy stone.3
+    px ($x+2) $hy stone.1
+  end
+end
+
+# ruined pillar: plinth 16 wide, shaft 12 wide and 26 tall, broken chunk on top
+part pillar x y
+  isogrid $x ($y+4) 16 8
+  isobox 0 0 ramp=brick h=4
+  isogrid $x ($y+5) 12 6
+  isobox 0 0 ramp=brick h=26 lift=4
+  isogrid ($x-2) ($y+6) 8 4
+  isobox 0 0 ramp=brick h=4 lift=30
+  # fluting on the lit face, cracks on the dark face
+  only color brick.3
+    vline ($x-3) ($y-19) 20 brick.2
+  end
+  only color brick.2
+    line ($x+2) ($y-14) ($x+3) ($y-10) brick.1
+    line ($x+3) ($y-10) ($x+2) ($y-6) brick.1
+  end
+end
+
+# dead tree: 40x38 art, roots on the tile center, lit trunk edge on the left
+part tree x y
+  art ($x-18) ($y-29)
+    ..............................n.........
+    ...n.........................n..........
+    ....n.........n.............nn.....n....
+    ....nn.........n...........n......n.....
+    .....n.........n..........n......nn.....
+    ......n.......nn.........nn.....n.......
+    ..n...nn......n.........n......nn.......
+    ...n...n.....nn........nn.....n.........
+    ....n..nn....n........n......nn.....n...
+    .....n..n...nn.......nn.....n......n....
+    ......nnnn..n........n.....nn.....nn....
+    .........nn.n.......nn....n......n......
+    ..........nNn.......n....nn....nn.......
+    ...........nNn.....nn...n.....n.........
+    ............mNn....n...nn...nn..........
+    .............mNn..nn..nn..nnn...........
+    ..............mNnnn..nNnnn..............
+    ...............mNNnnnNNn................
+    ...............mNNNNNNn.................
+    ...............mmNNNNn..................
+    ................mNNNnb..................
+    ................mNNNnb..................
+    ................mNNNnnnnn...............
+    ................mNNNNn...nn.............
+    ................mNNNnb.....n............
+    ................mmNNnb..................
+    .................mNNnb..................
+    .................mNNnb..................
+    .................mNNNb..................
+    .................mNNnb..................
+    ................mmNNnb..................
+    ................mNNNnb..................
+    ...............mmNNNnb..................
+    ...............mNNNNnbb.................
+    ..............mmNNNnnnb.................
+    .............nmmNNNnnbbn................
+    ...........nnnmNNNNnnbbbnn..............
+    ..........n...nn....bb....n.............
+  end
+end
+
+# rock: 14x8, lit top-left
+part rock x y
+  art ($x-7) ($y+3)
+    ....TTtt......
+    ..TTTttttS....
+    .TTttttttSSs..
+    TTtttttSSSSss.
+    ttttttSSSSsss.
+    tttttSSSSsssss
+    .SSSSSSssssss.
+    ...SSsssssss..
+  end
+end
+
+# bush: three lit spheres, the back one first, outline broken with leaf tips
+part bush x y
+  sphere ($x+3) ($y+4) 5 ramp=leaf
+  sphere ($x-4) ($y+5) 5 ramp=leaf
+  sphere ($x) ($y+7) 5 ramp=leaf
+  art ($x-9) ($y-1)
+    .....q......Q....
+    .....q.....QQ....
+  end
+end
+
+# brazier: iron bowl on a tripod, fire variant passed by part name (fire_a/b/c)
+part fire_a x y
+  art $x $y
+    ....F....
+    ...FF....
+    ...FyF...
+    ..FyyF.F.
+    ..FyYyFF.
+    .FyYYyyF.
+    .FyYzYyF.
+    FyYzzYyyF
+    FyYzzzYyF
+    .FYzzzYF.
+  end
+end
+part fire_b x y
+  art $x $y
+    .....F...
+    ....FF...
+    ...FyF...
+    .F.FyyF..
+    .FFyYyF..
+    .FyyYYyF.
+    .FyYzYyF.
+    FyyYzzYyF
+    FyYzzzYyF
+    .FYzzzYF.
+  end
+end
+part fire_c x y
+  art $x $y
+    ...F..F..
+    ...F.FF..
+    ..FFyF...
+    ..FyyF...
+    .FyyYyF..
+    .FyYYyyF.
+    FyYzYYyF.
+    FyYzzYyyF
+    FyYzzzYyF
+    .FYzzzYF.
+  end
+end
+
+# fire_none: empty, the scene draws the flames per frame after its light pass
+part fire_none x y
+end
+
+part brazier x y fire
+  # tripod legs
+  line ($x-4) ($y-1) ($x-6) ($y+9) ink
+  line ($x+4) ($y-1) ($x+6) ($y+9) ink
+  line ($x) ($y) ($x) ($y+11) ink
+  # bowl body, then the glowing coal bed, then the fire above it
+  ovalbox ($x-6) ($y-7) 12 8 stone.2
+  ovalbox ($x-6) ($y-7) 6 8 stone.3
+  box ($x-6) ($y-7) 12 3 mask
+  only color mask
+    box ($x-6) ($y-7) 12 3 none
+  end
+  ovalbox ($x-6) ($y-9) 12 5 stone.4
+  ovalbox ($x-5) ($y-8) 10 3 fire.1
+  hline ($x-3) ($y-7) 6 fire.3
+  draw $fire ($x-4) ($y-18)
+end
+
+# fence: three posts and two rails through the tile center, dir=1 along gx
+# (rails face the light), dir=-1 along gy (rails in shade)
+part fence x y dir lit dark
+  let x0 = $x-8*$dir
+  line $x0 ($y-1) ($x0+15*$dir) ($y+6) $lit
+  line $x0 ($y+3) ($x0+15*$dir) ($y+10) $dark
+  repeat 3 as k
+    let px0 = $x0+$k*8*$dir
+    let py0 = $y+4+$k*4
+    box $px0 ($py0-10) 2 11 wood.3
+    vline ($px0+1) ($py0-10) 11 wood.1
+    px $px0 ($py0-11) wood.4
+    px ($px0+1) ($py0-11) wood.4
+  end
+end
+
+# well: stone ring 22 px wide on the tile center, wooden frame, rope and bucket
+part well x y
+  ovalbox ($x-11) ($y+4) 22 11 mask
+  box ($x-11) ($y+3) 22 7 mask
+  only color mask
+    cylinder ($x-11) ($y+3) 22 12 ramp=brick
+  end
+  # mortar dashes on the ring
+  hline ($x-9) ($y+10) 3 brick.2
+  hline ($x-1) ($y+11) 4 brick.2
+  hline ($x+6) ($y+10) 3 brick.1
+  hline ($x-6) ($y+13) 4 brick.2
+  hline ($x+3) ($y+13) 3 brick.1
+  # rim and the dark shaft with a glint of water
+  ovalbox ($x-11) ($y-2) 22 11 brick.4
+  ovalbox ($x-8) ($y) 16 7 ink
+  ovalbox ($x-5) ($y+3) 10 3 water.1
+  hline ($x-2) ($y+4) 3 water.3
+  # frame posts, beam, rope and bucket
+  box ($x-11) ($y-18) 2 22 wood.3
+  vline ($x-10) ($y-18) 22 wood.1
+  box ($x+9) ($y-18) 2 22 wood.3
+  vline ($x+10) ($y-18) 22 wood.1
+  hline ($x-12) ($y-20) 24 wood.4
+  hline ($x-12) ($y-19) 24 wood.1
+  vline ($x) ($y-18) 12 dirt.4
+  box ($x-2) ($y-6) 5 4 wood.2
+  hline ($x-2) ($y-5) 5 stone.2
+end
+
+# shrine: 2x2 tiles, anchor = top corner of its back tile
+# platform 64 wide h6, sanctum 40 wide h24, stepped roof of 6 tiers, door on the
+# lit (gy facing) side with a cold spirit glow, crystal above the apex
+part shrine x y
+  isogrid $x $y 64 32
+  isobox 0 0 ramp=brick h=6 top=brick.4
+  isogrid $x ($y+6) 40 20
+  isobox 0 0 ramp=brick h=24 lift=6
+  # courses on both sanctum faces
+  only color brick.3
+    repeat 4 as c from=1
+      line ($x-19) ($y+10-$c*5) ($x-1) ($y+19-$c*5) brick.2
+    end
+  end
+  only color brick.2
+    repeat 4 as c from=1
+      line ($x+18) ($y+10-$c*5) ($x) ($y+19-$c*5) brick.1
+    end
+  end
+  # door: dark arch on the lit face, columns follow the face slope
+  repeat 4 as k from=1
+    let c = $x-13+$k
+    vline $c ($y-2+floor(($c-$x+19)/2)) 12 ink
+  end
+  vline ($x-13) ($y+3) 10 ink
+  vline ($x-8) ($y+5) 10 ink
+  # cold light spilling at the door foot
+  hline ($x-12) ($y+13) 2 spirit.0
+  hline ($x-10) ($y+14) 2 spirit.0
+  # roof tiers
+  repeat 6 as t
+    let tw = 48-$t*8
+    isogrid $x ($y+(64-$tw)/4) $tw ($tw/2)
+    isobox 0 0 ramp=roof h=3 lift=(30+$t*3)
+  end
+  # spirit crystal floating above the apex
+  art ($x-2) ($y-42)
+    ..j..
+    .jIi.
+    jjIii
+    IjIii
+    .IIi.
+    ..i..
+  end
+end
+
+# guard: 14x23, facing the viewer, spear in his left hand, feet at the tile center
+part guard x y
+  art ($x-6) ($y-14)
+    ...........T..
+    ..........tTt.
+    ...........t..
+    ....tTT....t..
+    ...tTTTS...t..
+    ...tTTSS...t..
+    ...sAAas...t..
+    ...sAaas...t..
+    ....app....t..
+    ..sttSSss..t..
+    .stRrrrCCsaa..
+    .tsRrrrCCs.aa.
+    .tsRrrrCCs.t..
+    .aaRrrrCCc.t..
+    ..nnnnnnnc.t..
+    ...RrrrCC..t..
+    ...RrrCCc..t..
+    ...rrrCCc..t..
+    ...sssss...t..
+    ...ss.ss...t..
+    ...ss.ss...t..
+    ...kk.kk...t..
+    ..kkk.kkk..t..
+  end
+end
+
+# villager: hooded, 10x18, holds a lantern on the lit side
+part villager x y
+  art ($x-5) ($y-10)
+    ...mmN....
+    ..mNNNn...
+    ..mNppn...
+    ..mNaan...
+    .mNNNNnn..
+    .mNNNNNnn.
+    mmNNNNNnnb
+    mNNNNNNnnb
+    mNNNNNNnn.
+    aaNNNNNnnb
+    sYsNNNNnnb
+    sYsNNNNnnb
+    ssNNNNNnnb
+    ..NNNNNnnb
+    ..mNNNNnnb
+    ..mNNNNNnn
+    .mNNNNNNnn.
+    ..kk...kk.
+  end
+end
+
+# gravestone: thin slab along gx (3 overlapping boxes), carved cross on the lit face
+part grave x y
+  draw run ($x-2) ($y+5) 3 1 11 stone 8 stone.4
+  vline ($x-3) ($y+1) 6 stone.1
+  hline ($x-4) ($y+2) 3 stone.1
+  px ($x-2) ($y+3) stone.1
+end

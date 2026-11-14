@@ -1,0 +1,234 @@
+# scene: ruined shrine at the edge of a village, dusk
+# canvas : 384x256, floor island of 10x10 tiles (32x16) on an earth slab,
+#          dark dusk sky painted last behind everything (only empty)
+# grid   : OX=192 OY=72, tile (gx,gy) top corner = (OX+(gx-gy)*16, OY+(gx+gy)*8)
+#          island spans x 33..350, y 72..231, slab sides 10 px below it
+# light  : tl dusk sun; braziers at (3,3) and (6,3) give warm pools,
+#          the spirit crystal above the shrine a cold one
+# order  : slab -> floor tiles -> floor shade (vignette, cast shadows) ->
+#          props back to front by gx+gy -> warm/cold light pass -> sky
+# layout : shrine 2x2 at (4,1)-(5,2) on a flagstone plaza gx 3..6, gy 1..5
+#          ruined walls on the back edges, yard with crates top-left, pond left,
+#          dirt path from the plaza to the front corner, well and villager on it,
+#          dead tree right, fences on the front edges
+# frames : 3 flicker frames (fire_a/b/c, glow radius 30/33/31), png = frame 0
+
+canvas 384x256
+include "palette-and-parts.xel"
+lint maxcolors=64
+lint orphans=fire.4,spirit.2,star
+
+let OX = 192
+let OY = 72
+
+part at name gx gy
+  draw $name ($OX+($gx-$gy)*16) ($OY+($gx+$gy)*8)
+end
+part at1 name gx gy a
+  draw $name ($OX+($gx-$gy)*16) ($OY+($gx+$gy)*8) $a
+end
+part at3 name gx gy a b c
+  draw $name ($OX+($gx-$gy)*16) ($OY+($gx+$gy)*8) $a $b $c
+end
+part at5 name gx gy a b c d e
+  draw $name ($OX+($gx-$gy)*16) ($OY+($gx+$gy)*8) $a $b $c $d $e
+end
+# flat cast shadow: tile center shifted toward the bottom right (light tl)
+part shadow gx gy dx dy rx ry
+  shade ($OX+($gx-$gy)*16+$dx) ($OY+($gx+$gy)*8+8+$dy) $rx $ry steps=1 hard=true
+end
+
+base
+  # ---------- earth slab ----------
+  isogrid $OX ($OY+10) 320 160
+  isobox 0 0 dirt.2 dirt.1 dirt.0 h=10
+
+  # ---------- floor ----------
+  repeat 10 as gy
+    repeat 10 as gx
+      draw at t_grass $gx $gy
+    end
+  end
+  # grass variant on a diagonal stride so the texture does not line up
+  repeat 10 as gy
+    repeat 3 as k
+      draw at t_grass2 ((($gy*2)%3)+$k*3) $gy
+    end
+  end
+  # yard
+  draw at t_dirt 1 1
+  draw at t_dirt 2 1
+  draw at t_dirt 1 2
+  draw at t_dirt 2 2
+  draw at t_dirt 3 0
+  # plaza
+  repeat 5 as gy from=1
+    repeat 4 as gx from=3
+      draw at t_flag $gx $gy
+    end
+  end
+  # path to the front corner
+  draw at t_dirt 4 6
+  draw at t_dirt 5 6
+  draw at t_dirt 5 7
+  draw at t_dirt 6 7
+  draw at t_dirt 6 8
+  draw at t_dirt 7 8
+  draw at t_dirt 7 9
+  draw at t_dirt 8 9
+  draw at t_dirt 9 9
+  draw at t_dirt 7 6
+  # pond
+  draw at t_water 0 5
+  draw at t_water 1 5
+  draw at t_water 0 6
+  draw at t_water 1 6
+  draw at t_water 0 7
+
+  # dark rim where the bank overhangs the pond
+  only touching grass.2
+    replace water.2 water.1 0 112 120 70
+  end
+
+  # ---------- floor shade: vignette toward the island corners ----------
+  shade 40 152 56 30 steps=1
+  shade 344 152 56 30 steps=1
+  # muddy shore: grass pixels touching the water turn to dirt
+  only touching water.2
+    replace grass.2 dirt.2 0 112 120 70
+  end
+
+  # ---------- cast shadows (toward the bottom right) ----------
+  draw shadow 0 1 10 2 12 6
+  draw shadow 0 2 10 2 12 6
+  draw shadow 1 0 4 8 12 5
+  draw shadow 2 0 4 8 10 4
+  draw shadow 1 1 5 2 8 4
+  draw shadow 2 1 5 2 8 4
+  draw shadow 1 2 4 2 6 3
+  draw shadow 5 2 10 6 24 9
+  draw shadow 3 3 4 2 6 3
+  draw shadow 6 3 4 2 6 3
+  draw shadow 3 4 3 1 5 2
+  draw shadow 3 5 8 3 10 4
+  draw shadow 6 5 8 3 10 4
+  draw shadow 8 1 10 4 16 5
+  draw shadow 7 6 5 3 12 5
+  draw shadow 6 7 3 1 5 2
+  draw shadow 2 4 3 1 6 3
+  draw shadow 8 3 3 1 6 3
+  draw shadow 7 1 4 2 6 3
+  draw shadow 7 3 4 2 6 3
+
+  # ---------- props, back to front (gx+gy) ----------
+  # d0..d2: walls and yard
+  draw at5 wall 0 0 -1 8 26 brick.2 brick.1
+  draw wall ($OX+2) ($OY+1) 1 7 26 brick.3 brick.2
+  draw at5 wall 0 1 -1 8 24 brick.2 brick.1
+  draw at5 wall 1 0 1 8 22 brick.3 brick.2
+  draw at5 wall 0 2 -1 6 14 brick.2 brick.1
+  draw at5 wall 2 0 1 6 12 brick.3 brick.2
+  draw at crate 1 1
+  # d3
+  draw at rock 0 3
+  draw at crate 2 1
+  draw crate ($OX+16) ($OY+13)
+  draw barrel ($OX-21) ($OY+22)
+  draw barrel ($OX-11) ($OY+27)
+  # d4
+  draw at bush 0 4
+  # d5..d6: shrine and the left brazier
+  draw at shrine 4 1
+  draw at rock 2 4
+  draw at1 brazier 3 3 fire_none
+  # d7..d9
+  draw at guard 3 4
+  draw at bush 8 0
+  draw at pillar 3 5
+  draw at grave 7 1
+  draw at1 brazier 6 3 fire_none
+  draw at tree 8 1
+  draw at3 fence 1 8 1 wood.3 wood.2
+  # d10..d12
+  draw at3 fence 2 8 1 wood.3 wood.2
+  draw at pillar 6 5
+  draw at grave 7 3
+  draw at rock 8 3
+  draw at bush 2 9
+  draw at3 fence 3 8 1 wood.3 wood.2
+  draw at3 fence 4 8 1 wood.3 wood.2
+  # d13..d16
+  draw at well 7 6
+  draw at villager 6 7
+  draw at3 fence 9 4 -1 wood.2 wood.1
+  draw at3 fence 9 5 -1 wood.2 wood.1
+  draw at3 fence 9 6 -1 wood.2 wood.1
+  draw at bush 9 7
+end
+
+# ---------- light pass and sky per frame ----------
+part lights r f1 f2
+  # warm pools around both braziers: wide soft step, then a hot core
+  glow ($OX) ($OY+56) $r ($r/2) steps=1 hard=true
+  glow ($OX) ($OY+56) ($r/2) ($r/4) steps=1 hard=true
+  glow ($OX+48) ($OY+80) $r ($r/2) steps=1 hard=true
+  glow ($OX+48) ($OY+80) ($r/2) ($r/4) steps=1 hard=true
+  # lantern of the villager
+  glow ($OX-20) ($OY+104) 10 5 steps=1 hard=true
+  # cold spirit light on the roof and at the door
+  glow ($OX+48) ($OY-2) 12 8 steps=1 hard=true
+  # flames on top of the lit bowls
+  draw $f1 ($OX-4) ($OY+30)
+  draw $f2 ($OX+44) ($OY+54)
+  # dusk sky behind everything: moon and stars first, then the gradient
+  only empty
+    art 324 22
+      ....9999.....
+      ..999........
+      .998.........
+      .98..........
+      998..........
+      998..........
+      998..........
+      998..........
+      998..........
+      .98..........
+      .9988........
+      ..99988......
+      ....9999.....
+    end
+    px 40 30 star
+    px 97 14 star
+    px 150 40 star
+    px 230 12 star
+    px 280 52 star
+    px 362 70 star
+    px 18 84 star
+    px 300 18 star
+    art 66 46
+      .0.
+      000
+      .0.
+    end
+    art 254 30
+      .0.
+      000
+      .0.
+    end
+    gradient 0 0 384 256 ramp=sky dir=v dither=bayer4
+  end
+end
+
+frame flicker1 dur=140
+  draw lights 30 fire_a fire_c
+end
+frame flicker2 dur=120
+  draw lights 33 fire_b fire_a
+end
+frame flicker3 dur=160
+  draw lights 31 fire_c fire_b
+end
+tag flicker 0 2
+
+export png scene.png scale=3 frame=0
+export gif scene.gif scale=3 tag=flicker
