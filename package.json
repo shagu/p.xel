@@ -1,0 +1,11 @@
+{
+  "name": "p.xel",
+  "version": "1.0.0",
+  "description": "Pixel-Art Graphics as Code. Deterministic .xel DSL to png/gif/ascii",
+  "type": "module",
+  "bin": { "xel": "./xel.js" },
+  "scripts": {
+    "test": "node test/run.js"
+  },
+  "license": "MIT"
+}
