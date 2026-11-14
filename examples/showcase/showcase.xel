@@ -1,0 +1,375 @@
+# showcase: feature poster for text, color palettes and dithering in xel
+# canvas  : 320x180 (16:9), export scale 4 = 1280x720
+# style   : demoscene info screen / retro game manual page, dark navy ui, warm accent
+# palette : night (ui, 6 explicit steps), cream (text), sun (auto, title + accents),
+#           sea (auto, gradient demo), stone/ember (glow demo), plus the builtin
+#           palettes loaded one by one right before their swatch card is drawn
+#           (several builtins share color names, so they cannot all be loaded up front)
+# light   : top-left (panel bevels, sphere)
+#
+# layout grid: margin 4, gutter 4, panel bevel light top/left, dark bottom/right
+#   header   x4..315   y4..35    title "p.xel" 5x7 scale 3 at 10,8 (rows 8..31),
+#                                outline ring + drop shadow, gradient fill
+#                                subtitle 5x7 at x104 y10, tagline 3x5 at y22
+#                                info block right aligned to x310
+#   text     x4..199   y40..106  bar y41..48 "01 TYPE"
+#                                gutter labels x8 (3x5), specimens from x24
+#                                y51 caps, y60 lower, y70 digits, y80 3x5, y88 scale 2
+#   dither   x4..199   y110..175 bar y111..118 "02 DITHER"
+#                                7 tiles 24x16 at x9, 37 + n*27, y122; labels y141
+#                                row 2 y148..174: gradients x9..121, sphere, glow tile
+#   palettes x204..315 y40..175  bar y41..48 "03 COLOR"
+#                                cards 2 columns x208 / x262 (50 wide)
+#                                y52 gameboy | gb-soft, y73 pocket-16 | md-punch,
+#                                y103 snes-soft | dark-fantasy (+1bit), y148 ramp auto
+# frames  : 0 still (png), 1-7 glint sweep over the title (70 ms), 8 cursor off (590 ms)
+
+canvas 320x180
+light tl
+name "showcase"
+lint maxcolors=160
+# glyph counters and i/j dots are single pixels by design: skip text areas
+lint region=4,4,312,32
+lint region=5,41,194,65
+lint region=5,111,194,8
+lint region=5,140,194,6
+lint region=5,149,28,16
+lint region=34,168,60,6
+lint region=130,169,66,6
+lint region=205,41,110,8
+lint region=205,52,110,5
+lint region=205,68,110,5
+lint region=205,103,110,5
+lint region=205,138,20,5
+lint region=205,148,110,5
+lint region=205,155,30,17
+# the glow ring is dithered on purpose
+lint region=158,148,38,20
+
+ramp night #0b0c17 #151a2c #1f2640 #2d3756 #475578 #7c8cb0
+color cream #f4ecd8
+ramp sun auto base=#e8743a steps=5 hue=16
+ramp sea auto base=#3a9aa0 steps=5 hue=14
+
+# ---------- layout ----------
+bg night.1
+
+# panel with bevel: light top/left, dark bottom/right, fill night.2
+part panel x y w h
+  box $x $y $w $h night.2
+  hline $x $y $w night.3
+  vline $x $y $h night.3
+  hline $x ($y+$h-1) $w night.0
+  vline ($x+$w-1) $y $h night.0
+end
+
+# section bar: darker strip under the panel top edge, index number + title
+part bar x y w
+  box ($x+1) ($y+1) ($w-2) 8 night.1
+  hline ($x+1) ($y+9) ($w-2) night.3
+end
+
+draw panel 4 4 312 32
+# header backdrop: a soft bayer8 fade, lighter at the top
+ramp hdr #2d3756 #1f2640 #1a2036
+gradient 5 5 310 30 ramp=hdr dir=v dither=bayer8
+draw panel 4 40 196 67
+draw bar 4 40 196
+draw panel 4 110 196 66
+draw bar 4 110 196
+draw panel 204 40 112 136
+draw bar 204 40 112
+
+text 9 43 "01" sun.3 font=3x5
+text 21 43 "TYPE" cream font=3x5
+text 9 113 "02" sun.3 font=3x5
+text 21 113 "DITHER" cream font=3x5
+text 209 43 "03" sun.3 font=3x5
+text 221 43 "COLOR" cream font=3x5
+
+# ---------- header ----------
+# title: drop shadow ring at +2,+2, dark outline ring, then a banded fill
+ramp flame #4f2029 #ca392f #e8743a #f4b659 #fff090
+let tx = 10
+let ty = 8
+group dx=2 dy=2
+  repeat 3 as j from=-1
+    repeat 3 as i from=-1
+      text ($tx+$i) ($ty+$j) "p.xel" night.1 scale=3
+    end
+  end
+end
+repeat 3 as j from=-1
+  repeat 3 as i from=-1
+    text ($tx+$i) ($ty+$j) "p.xel" night.0 scale=3
+  end
+end
+text $tx $ty "p.xel" cream scale=3
+only color cream
+  box 0 8 120 11 flame.4
+  box 0 19 120 5 flame.3
+  box 0 24 120 5 flame.2
+  box 0 29 120 3 flame.1
+end
+
+# subtitle and tagline
+text 108 11 "Pixel art as code" cream
+text 108 23 "TEXT  PALETTES  DITHERING" night.5 font=3x5
+
+# info block, right aligned
+text 310 11 "FEATURE SHEET" sun.3 font=3x5 align=right
+text 310 18 "320X180  X4" night.5 font=3x5 align=right
+box 286 25 5 4 flame.0
+box 291 25 5 4 flame.1
+box 296 25 5 4 flame.2
+box 301 25 5 4 flame.3
+box 306 25 4 4 flame.4
+
+# ---------- 01 type ----------
+# gutter labels name the font, specimens start at x24
+text 8 52 "5X7" night.5 font=3x5
+text 24 51 "ABCDEFGHIJKLMNOPQRSTUVWXYZ" cream
+text 24 60 "abcdefghijklmnopqrstuvwxyz" cream
+text 24 70 "0123456789 .,:;!?+-*/=()#&@%" cream
+text 8 80 "3X5" night.5 font=3x5
+text 24 80 "ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789 .:!?%" cream font=3x5
+text 8 93 "X2" night.5 font=3x5
+text 24 88 "Hello," cream scale=2 shadow=night.0
+text 108 88 "xel!" sun.3 scale=2 shadow=night.0
+box 158 88 10 14 sun.2
+
+# ---------- 02 dither ----------
+text 194 113 "TOP 50%  BOTTOM LEVEL 0-1" night.5 font=3x5 align=right
+
+# tile: frame, 8 rows at level 0.5, 8 rows stepping the level from 0 to 1
+# x positions: 9, then stride 27 from 37 (checker label is the widest)
+part frame x y
+  rect ($x-1) ($y-1) 26 18 night.0
+end
+let dy = 122
+draw frame 9 $dy
+dither 9 $dy 24 8 night.1 sun.3 pattern=checker
+draw frame 37 $dy
+dither 37 $dy 24 8 night.1 sun.3 pattern=bayer2
+draw frame 64 $dy
+dither 64 $dy 24 8 night.1 sun.3 pattern=bayer4
+draw frame 91 $dy
+dither 91 $dy 24 8 night.1 sun.3 pattern=bayer8
+draw frame 118 $dy
+dither 118 $dy 24 8 night.1 sun.3 pattern=lines
+draw frame 145 $dy
+dither 145 $dy 24 8 night.1 sun.3 pattern=dots25
+draw frame 172 $dy
+dither 172 $dy 24 8 night.1 sun.3 pattern=dots75
+repeat 24 as i
+  let lv = ($i + 0.5) / 24
+  dither (9+$i) ($dy+8) 1 8 night.1 sun.3 pattern=checker level=$lv
+  dither (37+$i) ($dy+8) 1 8 night.1 sun.3 pattern=bayer2 level=$lv
+  dither (64+$i) ($dy+8) 1 8 night.1 sun.3 pattern=bayer4 level=$lv
+  dither (91+$i) ($dy+8) 1 8 night.1 sun.3 pattern=bayer8 level=$lv
+  dither (118+$i) ($dy+8) 1 8 night.1 sun.3 pattern=lines level=$lv
+  dither (145+$i) ($dy+8) 1 8 night.1 sun.3 pattern=dots25 level=$lv
+  dither (172+$i) ($dy+8) 1 8 night.1 sun.3 pattern=dots75 level=$lv
+end
+text 8 141 "CHECKER" cream font=3x5
+text 49 141 "BAYER2" cream font=3x5 align=center
+text 76 141 "BAYER4" cream font=3x5 align=center
+text 103 141 "BAYER8" cream font=3x5 align=center
+text 130 141 "LINES" cream font=3x5 align=center
+text 157 141 "DOTS25" cream font=3x5 align=center
+text 184 141 "DOTS75" cream font=3x5 align=center
+
+# gradients: the same ramp hard banded and with bayer4 transitions
+text 9 151 "HARD" night.5 font=3x5
+rect 33 149 88 8 night.0
+gradient 34 150 86 6 ramp=sea dir=h
+text 9 160 "BAYER4" night.5 font=3x5
+rect 33 158 88 8 night.0
+gradient 34 159 86 6 ramp=sea dir=h dither=bayer4
+text 34 169 "GRADIENT DIR=H" night.5 font=3x5
+
+# lit sphere with a flat cast shadow, light from the top left
+ramp orb auto base=#5a8ad0 steps=5 hue=18
+oval 142 167 9 1 night.1
+sphere 140 157 10 ramp=orb
+text 140 170 "SPHERE" night.5 font=3x5 align=center
+
+# glow and shade on a stone wall: pixels move up or down their own ramp
+palette dark-fantasy
+clip 158 148 38 20
+box 158 148 38 20 gold.1
+repeat 4 as r
+  hline 158 (148+$r*5+4) 38 gold.0
+end
+repeat 7 as k
+  vline (160+$k*6) 148 4 gold.0
+  vline (163+$k*6) 153 4 gold.0
+  vline (160+$k*6) 158 4 gold.0
+  vline (163+$k*6) 163 4 gold.0
+end
+  glow 177 157 17 10 steps=2
+  shade 158 148 12 8 steps=1
+  shade 195 167 12 8 steps=1
+end
+# torch flame at the glow center
+map
+  e ember
+  E gold.4
+end
+art 176 155
+  .e.
+  eEe
+  .e.
+end
+rect 157 147 40 22 night.0
+text 177 170 "GLOW SHADE" night.5 font=3x5 align=center
+
+# ---------- 03 color ----------
+# swatch rows: cells 9 wide on a 10 px stride, dark to light, left to right
+part sw2 x y h a b
+  box $x $y 9 $h $a
+  box ($x+10) $y 9 $h $b
+end
+# (each part is flat: a color held in a $variable cannot be passed on to a nested draw)
+part sw3 x y h a b c
+  box $x $y 9 $h $a
+  box ($x+10) $y 9 $h $b
+  box ($x+20) $y 9 $h $c
+end
+part sw4 x y h a b c d
+  box $x $y 9 $h $a
+  box ($x+10) $y 9 $h $b
+  box ($x+20) $y 9 $h $c
+  box ($x+30) $y 9 $h $d
+end
+part sw5 x y h a b c d e
+  box $x $y 9 $h $a
+  box ($x+10) $y 9 $h $b
+  box ($x+20) $y 9 $h $c
+  box ($x+30) $y 9 $h $d
+  box ($x+40) $y 9 $h $e
+end
+
+let ax = 208
+let bx = 262
+
+# row 1: the two game boy greens, 4 values each
+palette gameboy
+text $ax 52 "GAMEBOY" cream font=3x5
+draw sw4 $ax 58 6 gb.0 gb.1 gb.2 gb.3
+palette gameboy-soft
+text $bx 52 "GAMEBOY-SOFT" cream font=3x5
+draw sw4 $bx 58 6 gb.0 gb.1 gb.2 gb.3
+
+# row 2
+palette pocket-16
+text $ax 68 "POCKET-16" cream font=3x5
+draw sw4 $ax 74 4 skin.0 skin.1 skin.2 skin.3
+draw sw4 $ax 79 4 cloth.0 cloth.1 cloth.2 cloth.3
+draw sw4 $ax 84 4 leaf.0 leaf.1 leaf.2 leaf.3
+draw sw5 $ax 89 4 ink shadow red gold white
+palette md-punch
+text $bx 68 "MD-PUNCH" cream font=3x5
+draw sw4 $bx 74 4 blue.0 blue.1 blue.2 blue.3
+draw sw4 $bx 79 4 red.0 red.1 red.2 red.3
+draw sw4 $bx 84 4 green.0 green.1 green.2 green.3
+draw sw5 $bx 89 4 grey.0 grey.1 grey.2 grey.3 grey.4
+draw sw3 $bx 94 4 magenta cyan yellow
+
+# row 3
+palette snes-soft
+text $ax 103 "SNES-SOFT" cream font=3x5
+draw sw4 $ax 109 4 skin.0 skin.1 skin.2 skin.3
+draw sw4 $ax 114 4 robe.0 robe.1 robe.2 robe.3
+draw sw4 $ax 119 4 grass.0 grass.1 grass.2 grass.3
+draw sw4 $ax 124 4 wood.0 wood.1 wood.2 wood.3
+draw sw4 $ax 129 4 ink accent sky white
+palette dark-fantasy
+text $bx 103 "DARK-FANTASY" cream font=3x5
+draw sw5 $bx 109 4 steel.0 steel.1 steel.2 steel.3 steel.4
+draw sw5 $bx 114 4 gold.0 gold.1 gold.2 gold.3 gold.4
+draw sw5 $bx 119 4 blood.0 blood.1 blood.2 blood.3 blood.4
+draw sw5 $bx 124 4 flesh.0 flesh.1 flesh.2 flesh.3 flesh.4
+draw sw5 $bx 129 4 stone.0 stone.1 stone.2 stone.3 stone.4
+draw sw5 $bx 134 4 moss.0 moss.1 moss.2 moss.3 moss.4
+draw sw3 $bx 139 4 void ember spirit
+palette 1bit
+text $ax 138 "1BIT" cream font=3x5
+draw sw2 ($ax+20) 138 5 bw.0 bw.1
+
+# row 4: generated ramps, base color kept as the middle step
+hline 208 145 104 night.1
+text $ax 148 "RAMP AUTO" cream font=3x5
+text 311 148 "STEPS=7" night.5 font=3x5 align=right
+ramp warm auto base=#c87850 steps=7 hue=12
+ramp leafy auto base=#4a9a48 steps=7 hue=16
+ramp magic auto base=#9a5ab0 steps=7 hue=20
+part sw7 x y a b c d e f g
+  box $x $y 9 5 $a
+  box ($x+10) $y 9 5 $b
+  box ($x+20) $y 9 5 $c
+  box ($x+30) $y 9 5 $d
+  box ($x+40) $y 9 5 $e
+  box ($x+50) $y 9 5 $f
+  box ($x+60) $y 9 5 $g
+end
+text $ax 155 "H=12" night.5 font=3x5
+draw sw7 ($ax+32) 155 warm.0 warm.1 warm.2 warm.3 warm.4 warm.5 warm.6
+text $ax 161 "H=16" night.5 font=3x5
+draw sw7 ($ax+32) 161 leafy.0 leafy.1 leafy.2 leafy.3 leafy.4 leafy.5 leafy.6
+text $ax 167 "H=20" night.5 font=3x5
+draw sw7 ($ax+32) 167 magic.0 magic.1 magic.2 magic.3 magic.4 magic.5 magic.6
+
+# ---------- animation ----------
+# frame 0 (top level) is the still. frames 1-7 sweep a glint across the title,
+# frames 8-9 hold with the cursor off: 590 ms on, 590 ms off
+part glint x
+  only color flame.4
+    line $x 8 ($x-8) 31 cream
+    line ($x+1) 8 ($x-7) 31 cream
+    line ($x+2) 8 ($x-6) 31 cream
+  end
+  only color flame.3
+    line $x 8 ($x-8) 31 cream
+    line ($x+1) 8 ($x-7) 31 cream
+    line ($x+2) 8 ($x-6) 31 cream
+  end
+  only color flame.2
+    line $x 8 ($x-8) 31 cream
+    line ($x+1) 8 ($x-7) 31 cream
+    line ($x+2) 8 ($x-6) 31 cream
+  end
+  only color flame.1
+    line $x 8 ($x-8) 31 cream
+    line ($x+1) 8 ($x-7) 31 cream
+    line ($x+2) 8 ($x-6) 31 cream
+  end
+end
+frame g1 dur=70 from=0
+  draw glint 14
+end
+frame g2 dur=70 from=0
+  draw glint 26
+end
+frame g3 dur=70 from=0
+  draw glint 38
+end
+frame g4 dur=70 from=0
+  draw glint 50
+end
+frame g5 dur=70 from=0
+  draw glint 62
+end
+frame g6 dur=70 from=0
+  draw glint 74
+end
+frame g7 dur=70 from=0
+  draw glint 86
+end
+frame off dur=590 from=0
+  box 158 88 10 14 night.2
+end
+tag loop 0 8
+
+export png showcase.png scale=4 frame=0
+export gif showcase.gif scale=4 tag=loop
