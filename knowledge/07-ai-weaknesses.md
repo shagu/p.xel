@@ -63,13 +63,25 @@ Long files drift away from the original design, mixing styles and ramps.
 **Guardrail:** every file begins with a header comment stating subject, canvas, palette,
 light direction and frame plan. Re-read it before every pass.
 
-### 11. Non-determinism temptation
+### 11. Copying the wrong template
+Given no example that matches the subject, I fall back to the closest one, keep
+its charm markers (blush, catchlights) and hand-write freeform art blocks for a
+body type they were never meant for. A test run produced a lint-clean, gate-passing
+monkey that read as a child in a tan outfit: the ears, muzzle and tail never made
+it into the silhouette.
+**Guardrail:** before drawing, list the 2-4 features that make the subject
+recognisable and write their pixel sizes into the header. Assemble the body from
+volume primitives, make identity features outline bumps or appendages, and check
+a rendered PNG at scale 4 with the question "what is this?" before adding any
+detail. Charm markers come last.
+
+### 12. Non-determinism temptation
 Random noise, "artistic variation" and per-run differences make review and iteration
 impossible.
 **Guardrail:** the language is fully deterministic. The only randomness is a seeded
 `scatter` with an explicit seed.
 
-### 12. Premature polish
+### 13. Premature polish
 I tend to polish the first body part to perfection and then run out of budget for the
 rest, ending with an unbalanced sprite.
 **Guardrail:** fixed pass order - silhouette, flats, core shadow, details, outline,

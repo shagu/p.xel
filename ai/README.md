@@ -24,14 +24,19 @@ isometric, hardware styles, AI weaknesses).
 
 1. **Plan first.** Write the header comment (subject, canvas, palette, light,
    frame plan) before any drawing command.
-2. **Silhouette first.** Pass 1 is shape only. Check it with `--ascii mask`.
+2. **Silhouette first.** Before drawing, name the 2-4 features that make the
+   subject recognisable (what makes a monkey a monkey: ears, muzzle, tail).
+   Pass 1 is shape only. Check it with `--ascii mask` and a PNG at scale 4:
+   does it read as the subject, not something else?
 3. **Declare the palette up front.** Ramps of 3-5 steps, hue shifted
    (`ramp name auto base=#hex hue=12..18`). 6-12 colors per character.
 4. **One light direction.** `light tl` unless told otherwise. Never mix.
 5. **Use the volume helpers** (`sphere`, `cylinder`, `isobox`, `glow`, `shade`)
    instead of hand-placing gradients. They cannot pillow shade.
-6. **Draw with `art` blocks** for anything organic. Characters are exact and the
-   preview reads back in the same characters.
+6. **Build from primitives, detail with art.** Assemble bodies from `oval`,
+   `sphere`, `cylinder`, `box` (head, torso, limbs, ears). Reserve `art` blocks
+   for small organic shapes a primitive cannot express. A monkey is a few ovals
+   and cylinders, not one 100-row art block.
 7. **Reuse, never redraw.** Body parts are `part`s; frames only change offsets.
    Symmetric things are drawn as a half and `mirror`ed.
 8. **No noise.** Every lone pixel must have a reason (eye, sparkle, tip).

@@ -14,8 +14,15 @@ If a detail does not fit the budget, drop it or exaggerate it. Never cram.
 
 ## Gate checklists
 
-### G1 silhouette (`--ascii mask`)
-- [ ] subject recognisable in the mask alone
+### G1 silhouette (`--ascii mask` plus a PNG at scale 4)
+- [ ] identity features (the 2-4 things that make the subject what it is) are
+      named in the header with px sizes
+- [ ] each identity feature changes the outline (bump, appendage) or is a value
+      patch at least 2 steps from its surroundings; interior color patches alone
+      do not count
+- [ ] subject recognisable in the mask alone, and a 4x render answers "what is
+      this?" with the subject, not a different one (a monkey that reads as a
+      child has failed G1, however clean the craft)
 - [ ] key feature exaggerated (hood point, horns, sword, ears)
 - [ ] limbs separated from the torso by at least 1 px of gap or a value change
 - [ ] no 1 px "hairs" sticking out unless intended
@@ -70,6 +77,9 @@ If a detail does not fit the budget, drop it or exaggerate it. Never cram.
 | dithering small areas | static | flat cluster or band compression |
 | mirrored symmetry everywhere | stiff, robotic | mirror the base, then break symmetry with light and one asymmetric detail |
 | too subtle animation | nothing seems to move | exaggerate: 2 px instead of 1, longer holds on extremes |
+| identity feature as a color patch only | subject reads wrong at a glance | make it an outline bump or appendage and exaggerate it |
+| freehand art blocks for the whole body | drift, fragmented clusters, burnt budget on row math | assemble from primitives, art blocks for details only |
+| copy the closest example blindly | its charm markers land on an unrelated subject | plan identity features first, then borrow craft, not subject |
 | sliding feet | skating walk | keep the contact foot at the same x for its frames |
 | art block indentation mistakes | shape shifted | rows are dedented by their common indent; keep all rows equally indented |
 | characters not in `map` | compile error | add them to `map`, `.` and space are transparent |

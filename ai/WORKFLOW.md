@@ -11,22 +11,33 @@ Each procedure lists passes. After every pass: render, look, fix, then continue.
 2. **Proportions.** Decide the pixel budget before drawing. Example for 32x32 chibi:
    head 10-12 px tall, body 10, legs 6-8, feet on row 29-30, 1-2 px margin.
    Write the numbers into the header.
-3. **Pass 1 - silhouette.** Block every shape in one or two flat mid colors with
-   `art`, `box`, `oval`, `shape`. Check `--ascii mask`: does the shape read? Is the
-   pose clear? Is the key feature (hood, horns, weapon) exaggerated enough?
+3. **Identity features.** List the 2-4 features that make the subject
+   recognisable as a black silhouette (ears, muzzle, tail, horns, wings, weapon).
+   For each one write the region, the size in px, and how it reads: an outline
+   bump, an appendage, or a separate value patch. A feature must change the
+   silhouette; an interior color patch alone does not read. Under ~3 px nothing
+   reads, so exaggerate. Pick a pose that keeps every feature visible (a tail
+   hidden behind the body is wasted budget).
+4. **Pass 1 - silhouette.** Assemble the body from primitives: `oval`/`sphere`
+   head and torso, limbs as narrow `cylinder` bars or boxes, ears as ovals that
+   break the head outline. Use `art` blocks only for shapes no primitive can
+   express. Check `--ascii mask`, then render a PNG at scale 4 and ask: what is
+   this? If the answer is not the subject, restructure now, before any detail.
    Loop until yes. This is the most important pass.
-4. **Pass 2 - flats.** Assign each material its ramp mid color. Use `only color` +
+5. **Pass 2 - flats.** Assign each material its ramp mid color. Use `only color` +
    `box`/`fill` to recolor regions without touching the outline of the shape.
-5. **Pass 3 - light.** Lit side one step up, shadow side one or two steps down.
+6. **Pass 3 - light.** Lit side one step up, shadow side one or two steps down.
    Use `sphere`/`cylinder` for round masses, `only color` blocks for hand shading.
    Check `--ascii value`: light must come from the declared side everywhere.
-6. **Pass 4 - details.** Eyes, buckles, rivets, highlights. Each detail is a cluster
-   or a deliberate single pixel. Add `lint orphans=` for intentional ones.
-7. **Pass 5 - outline.** `outline selout` (soft, lit) or `outline ink` (bold).
+7. **Pass 4 - details.** Identity features first (make each one read), then the
+   rest: eyes, buckles, rivets, highlights. Charm markers (blush, catchlights)
+   last. Each detail is a cluster or a deliberate single pixel. Add
+   `lint orphans=` for intentional ones.
+8. **Pass 5 - outline.** `outline selout` (soft, lit) or `outline ink` (bold).
    Then fix outline junctions by hand where needed.
-8. **Pass 6 - polish.** Optional `aa`, specular dots, rim light. Run `--lint`.
+9. **Pass 6 - polish.** Optional `aa`, specular dots, rim light. Run `--lint`.
    Fix every warning or justify it.
-9. **Gates G1-G5, G7-G8.** Export.
+10. **Gates G1-G5, G7-G8.** Export.
 
 ## B. Animation (idle, walk, attack)
 
