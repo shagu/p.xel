@@ -56,7 +56,7 @@ intended default: look before you render.
 Example:
 
 ```
-$ node xel.js examples/slime/slime.xel --ascii mask --frame 0
+$ node xel.js slime.xel --ascii mask --frame 0
    0         1         2         3
    01234567890123456789012345678901
  0 ................................
@@ -110,5 +110,5 @@ node xel.js hero.xel --lint
 node xel.js hero.xel --png out/hero.png --scale 4
 node xel.js hero.xel --gif out/hero-walk.gif --tag walk --scale 4
 node xel.js hero.xel --sheet out/hero-sheet.png --cols 8
-node xel.js hero.xel --out examples/hero     # follow the file's export statements
+node xel.js hero.xel --out out/hero          # follow the file's export statements
 ```

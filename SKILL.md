@@ -17,9 +17,11 @@ scripts, image generators).
    (`ai/WORKFLOW.md`, `ai/CHECKLISTS.md`, `ai/STYLES.md`, `docs/language.md`).
 2. Copy the closest template from `ai/templates/` as a starting point:
    `sprite.xel`, `walk-cycle.xel`, `gameboy-16.xel`, `iso-scene.xel`, `text-panel.xel`.
-3. Finished references live in `examples/` (paladin, iso-scene, slime, gb-hero,
-   showcase). Read their sources when the task is similar.
-4. Background research, only if needed: `knowledge/`.
+3. Background research, only if needed: `knowledge/`.
+
+Never open, read, copy or imitate anything in `examples/`. Those files are a gallery for
+humans only; they are not reference material for agents. Use `ai/`, `docs/` and
+`knowledge/` exclusively.
 
 ## Working
 

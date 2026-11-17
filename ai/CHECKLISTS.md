@@ -79,7 +79,7 @@ If a detail does not fit the budget, drop it or exaggerate it. Never cram.
 | too subtle animation | nothing seems to move | exaggerate: 2 px instead of 1, longer holds on extremes |
 | identity feature as a color patch only | subject reads wrong at a glance | make it an outline bump or appendage and exaggerate it |
 | freehand art blocks for the whole body | drift, fragmented clusters, burnt budget on row math | assemble from primitives, art blocks for details only |
-| copy the closest example blindly | its charm markers land on an unrelated subject | plan identity features first, then borrow craft, not subject |
+| copy the closest template blindly | its charm markers land on an unrelated subject | plan identity features first, then borrow craft, not subject |
 | sliding feet | skating walk | keep the contact foot at the same x for its frames |
 | art block indentation mistakes | shape shifted | rows are dedented by their common indent; keep all rows equally indented |
 | characters not in `map` | compile error | add them to `map`, `.` and space are transparent |
@@ -90,7 +90,7 @@ If a detail does not fit the budget, drop it or exaggerate it. Never cram.
 ## Final report template
 
 ```
-files    : examples/x/x.xel, x.png, x.gif, x-sheet.png
+files    : out/x/x.xel, x.png, x.gif, x-sheet.png
 canvas   : 32x32, 12 frames (idle 0-3, walk 4-11)
 colors   : 11 (budget 12)
 gates    : G1 ok, G2 ok, G3 ok, G4 2 intentional orphans (eyes), G5 ok, G6 ok, G7 ok, G8 ok

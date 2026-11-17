@@ -75,7 +75,7 @@ node xel.js f.xel --lint                # craft checks
 node xel.js f.xel --png /tmp/r1.png --scale 8 --bg '#202020'   # look at it
 node xel.js f.xel --crop 40,20,32,32 --ascii                   # close-up of a big canvas
 node xel.js f.xel --sheet /tmp/r2.png --rows idle,walk --scale 6  # all frames at once
-node xel.js f.xel --out examples/name   # final export via 'export' lines
+node xel.js f.xel --out out/name        # final export via 'export' lines
 ```
 
 ## Quality gates (all must pass before you hand in)

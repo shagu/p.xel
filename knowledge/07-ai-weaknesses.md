@@ -64,7 +64,7 @@ Long files drift away from the original design, mixing styles and ramps.
 light direction and frame plan. Re-read it before every pass.
 
 ### 11. Copying the wrong template
-Given no example that matches the subject, I fall back to the closest one, keep
+Given no template that matches the subject, I fall back to the closest one, keep
 its charm markers (blush, catchlights) and hand-write freeform art blocks for a
 body type they were never meant for. A test run produced a lint-clean, gate-passing
 monkey that read as a child in a tan outfit: the ears, muzzle and tail never made
