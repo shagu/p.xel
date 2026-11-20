@@ -1,4 +1,4 @@
-# subject : hooded hero, Pokemon Red/Blue style overworld sprite
+# subject : hooded hero, 8-bit handheld overworld sprite
 # canvas  : 16x16, 4 directions (down, up, right, left = right mirrored)
 # palette : gameboy, 4 shades only. gb.0 outline/eyes/shoes, gb.1 hood + cloak,
 #           gb.2 scarf, legs, hood shine, backpack, gb.3 face + hands

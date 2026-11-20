@@ -1,5 +1,5 @@
 # paladin-parts: heavy armored paladin for an isometric dark fantasy rpg
-# style   : dark-fantasy-iso (diablo ii flavoured), light tl, selout outline
+# style   : dark-fantasy-iso, light tl, selout outline
 # canvas  : parts are drawn for a 64x64 cell, feet anchor at x=32 y=56
 # sizes   : helm top y8, helm 9 wide, shoulders 29 wide, belt y30, hem y44,
 #           ankles y53, soles y55-56 (near foot 1 px lower in the diagonal views)
@@ -11,7 +11,7 @@
 #           z-order of that direction; fig / figm (mirrored + relight) / pal / palm
 #           wrap them, finish adds the selout outline and the floor shadow
 palette dark-fantasy
-# diablo ii mood: grimy desaturated steel, tarnished gold, dried blood red
+# mood    : grimy desaturated steel, tarnished gold, dried blood red
 ramp steel #0c0c0f #1d1e22 #34363b #55575a #8a8a84
 ramp gold #170f05 #36250e #5e451c #8c6c32 #bb9a55
 ramp blood #100304 #2a080a #4c1012 #74191a #9c2c24
