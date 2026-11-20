@@ -1,0 +1,78 @@
+# template: top-down tile and the 4x4 repeat test
+# subject : seamless 16x16 stone floor, two variants, tiled 4x4
+# canvas  : 64x64 (a 4x4 patch, so seams and repeats are visible at once)
+# grid    : courses 8 px tall, 1 px mortar, second course shifted half a brick
+# palette : one 4-step auto ramp: mortar, shadow, face, lit top
+# light   : top-left, implied by the lit top row of every brick
+#
+# review with
+#   node xel.js ai/templates/tiles.xel --crop 0,0,16,16 --scale 8 --png tile.png
+#   node xel.js ai/templates/tiles.xel --png patch.png --scale 4
+#   node xel.js ai/templates/tiles.xel --lint
+#
+# this is the ground layer only. A real set adds the transition pieces:
+# 4 edges, 4 outer corners, 4 inner corners. See knowledge/09-tiles.md for
+# Wang-16 (16 tiles) and blob-47 (47 tiles, folded from 256 masks).
+
+canvas 64x64
+ramp stone auto base=#8a8a94 steps=4 hue=8
+lint orphans=off
+
+map
+  M stone.0
+  d stone.1
+  s stone.2
+  S stone.3
+end
+
+# variant a: every brick the same, all four edges are mortar
+part stone_1 x y
+  art $x $y
+    MMMMMMMMMMMMMMMM
+    MSSSSSSSMSSSSSSS
+    MsssssssMsssssss
+    MsssssssMsssssss
+    MsssssssMsssssss
+    MsssssssMsssssss
+    MsssssssMsssssss
+    MdddddddMddddddd
+    MMMMMMMMMMMMMMMM
+    SSSSMSSSSSSSMSSS
+    ssssMsssssssMsss
+    ssssMsssssssMsss
+    ssssMsssssssMsss
+    ssssMsssssssMsss
+    ssssMsssssssMsss
+    ddddMdddddddMddd
+  end
+end
+
+# variant b: one brick a step darker. same mortar edges, so the variants mix
+part stone_2 x y
+  art $x $y
+    MMMMMMMMMMMMMMMM
+    MSSSSSSSMSSSSSSS
+    MsssssssMsssssss
+    MsssssssMsssssss
+    MsssssssMsssssss
+    MsssssssMsssssss
+    MsssssssMsssssss
+    MdddddddMddddddd
+    MMMMMMMMMMMMMMMM
+    SSSSMsssssssMSSS
+    ssssMdddddddMsss
+    ssssMdddddddMsss
+    ssssMdddddddMsss
+    ssssMdddddddMsss
+    ssssMdddddddMsss
+    ddddMdddddddMddd
+  end
+end
+
+# alternate the variants, otherwise the single tile reads as wallpaper
+repeat 4 as ty
+  repeat 4 as tx
+    let v = if((($tx + $ty) % 2) == 1, 2, 1)
+    draw stone_$v ($tx*16) ($ty*16)
+  end
+end
