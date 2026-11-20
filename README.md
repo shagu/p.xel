@@ -22,17 +22,6 @@ node xel.js slime.xel --png slime.png --scale 8
 
 No dependencies. Node 18+.
 
-## Install as a pi skill
-
-```bash
-./install.sh
-```
-
-Copies [`SKILL.md`](SKILL.md), the compiler, `ai/`, `docs/`, `knowledge/` and
-`examples/` into `~/.pi/agent/skills/p-xel/`. Everything lives in that one directory;
-the skill makes pi use p.xel whenever a request involves pixel art. Run it again to
-update, set `PI_AGENT_DIR` to install elsewhere.
-
 ## Why a language for pixel art?
 
 Language models are good at writing code and bad at placing pixels blind. Asking an
@@ -191,6 +180,13 @@ part names (`draw torso_$dir`), comparisons and `if()` in expressions, palette p
 value steps, a quieter linter (8-neighbour orphans, dither detection, per tag motion and
 loop-seam checks, body-bob check) and errors instead of hangs on bad numbers.
 
-## License
+## Install as a pi skill
 
-MIT
+```bash
+./install.sh
+```
+
+Copies [`SKILL.md`](SKILL.md), the compiler, `ai/`, `docs/`, `knowledge/` and
+`examples/` into `~/.pi/agent/skills/p-xel/`. Everything lives in that one directory;
+the skill makes pi use p.xel whenever a request involves pixel art. Run it again to
+update, set `PI_AGENT_DIR` to install elsewhere.
