@@ -51,7 +51,7 @@ what it drew. p.xel turns that around:
 | [`xel.js`](xel.js), [`src/`](src/) | the compiler: parser, interpreter, rasterizers, PNG/GIF encoders, ascii, lint |
 | [`docs/`](docs/) | [language reference](docs/language.md), [CLI](docs/cli.md), [engine internals](docs/engine.md) |
 | [`ai/`](ai/) | the entry point for agents: rules, workflows, quality gates, style presets, templates |
-| [`knowledge/`](knowledge/) | the research behind it: fundamentals, color, shading, animation, isometric, hardware styles, AI failure modes |
+| [`knowledge/`](knowledge/) | the research behind it: fundamentals, color, shading, animation, isometric, tiles and autotiling, UI, hardware styles, AI failure modes |
 | [`examples/`](examples/) | finished pieces, each made by a fresh agent that only read `ai/` (see below) |
 | [`test/`](test/) | regression suite (`node test/run.js`) |
 
