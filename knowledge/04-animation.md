@@ -73,7 +73,7 @@ Non-negotiables:
 Move the colors, not the sprite. By shifting shading and edge anti-aliasing values
 between frames you fake motion smaller than one pixel, letting a sprite breathe or sway
 without the silhouette jumping. Needs at least 2-3 tones per material; the extra tones
-pay for themselves. This is what makes Metal Slug sprites feel alive.
+pay for themselves. This is what makes arcade run-and-gun sprites feel alive.
 
 ## Loops and consistency
 

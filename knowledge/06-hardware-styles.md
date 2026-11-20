@@ -23,9 +23,9 @@ adopt its constraints, and the style follows.
 - Same tile engine; 8 background palettes + 8 sprite palettes, 4 colors each,
   RGB555 (32768 possible). 32 colors on screen for sprites.
 - Style: flat 3-4 tone materials, bright saturated primaries, dark outlines kept,
-  background tiles in muted hues so sprites read. Pokemon Gold/Silver is the benchmark:
-  16x16 overworld characters, 2 walk frames per direction plus mirror, no shading
-  beyond one shadow tone.
+  background tiles in muted hues so sprites read. The benchmark look: 16x16 overworld
+  characters, 2 walk frames per direction plus mirror, no shading beyond one shadow
+  tone.
 
 ## NES (1983)
 
@@ -44,7 +44,7 @@ adopt its constraints, and the style follows.
     (designed for CRT blur).
   - thick black outlines, strong rim light, metallic ramps.
   - big sprites assembled from many 8x8 tiles; characters 32-48 px with strong
-    attitude poses (Sonic, Streets of Rage, Shinobi).
+    attitude poses, faces readable at a glance.
 
 ## SNES (1990)
 
@@ -55,15 +55,15 @@ adopt its constraints, and the style follows.
   - softer, pastel, hue-shifted ramps; less dithering than Mega Drive.
   - layered parallax backgrounds, additive transparency effects.
   - 16 colors per sprite palette allows 4-6 tone ramps, selective outlines,
-    subtle skin shading (Chrono Trigger, Secret of Mana, Super Metroid).
+    subtle skin shading on faces.
 
 ## Arcade / Neo Geo (for reference)
 
 - Huge palettes (4096 colors on screen) and high frame counts.
-  Metal Slug: 15+ frame animations, sub-pixel shading, dense detail. Only attempt this
-  at 48px+ and with time to burn.
+  Run-and-gun arcade titles: 15+ frame animations, sub-pixel shading, dense detail.
+  Only attempt this at 48px+ and with time to burn.
 
-## PC / VGA (Commandos, Fallout, Diablo II)
+## PC / VGA (256-color, late 90s)
 
 - 320x200 or 640x480, 256-color indexed palettes chosen per scene,
   color cycling for water/fire/lights.
@@ -75,8 +75,8 @@ adopt its constraints, and the style follows.
 | Goal | Target |
 | --- | --- |
 | cute, tiny, nostalgic, 4 values | Game Boy DMG |
-| cute, colorful, flat, 16x16 cast | Game Boy Color / Pokemon G/S |
+| cute, colorful, flat, 16x16 cast | Game Boy Color |
 | punchy action, big sprites, dithering | Mega Drive |
 | soft RPG, layered scenes, gradients | SNES |
-| dark fantasy isometric, 256 colors | VGA / Diablo II |
-| strategy isometric, many small units | Genie engine / AoE |
+| dark fantasy isometric, 256 colors | VGA 256-color |
+| strategy isometric, many small units | late-90s RTS engine |

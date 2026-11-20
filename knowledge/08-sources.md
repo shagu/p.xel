@@ -38,5 +38,5 @@ Research behind `knowledge/`. All read in full during the project's research pha
 
 - Wikipedia: Twelve basic principles of animation, Walk cycle, Skeletal animation,
   Isometric video game graphics
-- Reference games: Diablo II, Age of Empires (Genie engine), Commandos: Behind Enemy
-  Lines, Metal Slug, Pokemon Red/Blue and Gold/Silver.
+- Reference eras: late-90s dark fantasy ARPG, isometric RTS and WW2 tactics, arcade
+  run-and-guns, 8-bit handheld overworld maps.
