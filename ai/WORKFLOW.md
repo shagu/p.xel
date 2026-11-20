@@ -105,15 +105,33 @@ Screen position of tile `(gx, gy)`: top corner
 `x = ox + (gx - gy) * tw/2`, `y = oy + (gx + gy) * th/2`; a block of height `h`
 puts its top face `h` px higher.
 
+## C2. Top-down tileset
+
+1. **Size and set.** 16x16 tiles, one palette, one light. Decide Wang-16 (open ground)
+   or blob-47 (walls, cliffs, paths) before drawing: `knowledge/09-tiles.md`.
+2. **Fill tile.** Start from `ai/templates/tiles.xel`. Keep the four edge strips plain,
+   put detail in the interior, test the 4x4 repeat after every pass.
+3. **Variants.** Two or three copies with the same edge strips, mixed in the patch so
+   the grid does not read as wallpaper.
+4. **Transitions.** 4 straight edges and 4 inner corners carry the set. Draw the inner
+   corners first, they are the tiles everyone forgets.
+5. **Sheet.** One frame per tile or one file per tile, same canvas size, `export sheet`.
+   Record tile size, columns and terrain order in the header.
+6. **Review.** `--crop` one cell at `--scale 8`, then the patch at 1x and 4x, squinting.
+
 ## D. Text, UI and palette showcases
 
 1. Use `text` with `font=5x7` for body text and `font=3x5` for tiny labels;
    `scale=2` or `3` for titles. Keep at least 1 px spacing, 2 px line gap.
 2. Titles: draw the text twice, a dark shadow at +1,+1 (`shadow=`), or `outline`
-   it on its own frame region.
-3. Panels: `rect` with `fill=`, a 1 px light edge on the lit side, dark on the other.
-4. Palette swatches: `box` per ramp step in a row, label with `3x5` text.
-5. Dither demos: a strip per pattern with the same two colors, labelled.
+   it on its own frame region. Body text stays plain.
+3. Panels: a 9-slice source (24x24 with 8 px margins), flat body, 1 px light edge on
+   the lit side and dark on the other, details only in the corners. Layout rules:
+   `knowledge/10-ui.md`.
+4. Bars: frame and fill separate, fill cropped with `clip`, 1 px lighter row on top.
+   Keep one set of margins across every button state.
+5. Palette swatches: `box` per ramp step in a row, label with `3x5` text.
+6. Dither demos: a strip per pattern with the same two colors, labelled.
 
 ## E. Review loop budget
 

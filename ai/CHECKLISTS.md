@@ -86,6 +86,10 @@ If a detail does not fit the budget, drop it or exaggerate it. Never cram.
 | reviewing a cached image | "nothing changed" | new file name for every review render |
 | 2:1 slope broken in iso | wobbly edges | use `isotile` / `isobox`, never freehand iso edges |
 | props lit from different sides | scene falls apart | one `light`, `isobox ramp=` everywhere |
+| a landmark inside a tile | the repeat reads as wallpaper | plain edge strips, even detail, variants, props on top |
+| detail on a 9-slice edge | stretched rivets and notches | details in the corners, plain or tiled edges |
+| UI judged on an empty canvas | unreadable over the game | test at 1x over the busiest scene, grayscale |
+| bar fill scaled, not cropped | the highlight row becomes a band | frame and fill separate, crop the fill with `clip` |
 
 ## Final report template
 

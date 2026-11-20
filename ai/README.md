@@ -8,17 +8,18 @@ the result after every pass. This folder tells you how.
 
 1. This file (rules, loop, gates) - always.
 2. [WORKFLOW.md](WORKFLOW.md) - step by step procedures for sprites, animations,
-   isometric scenes, sheets and text graphics.
+   isometric scenes, tilesets, sheets and text graphics.
 3. [CHECKLISTS.md](CHECKLISTS.md) - quality gates, detail budgets, pitfall list.
 4. [STYLES.md](STYLES.md) - presets for Game Boy, GBC, SNES, Mega Drive,
    dark-fantasy isometric.
 5. [../docs/language.md](../docs/language.md) - the full language reference. Keep it open.
 6. [templates/](templates/) - working files to copy from:
-   `sprite.xel`, `walk-cycle.xel`, `gameboy-16.xel`, `iso-scene.xel`, `text-panel.xel`.
+   `sprite.xel`, `walk-cycle.xel`, `gameboy-16.xel`, `iso-scene.xel`, `text-panel.xel`,
+   `tiles.xel`.
 
 Deeper background, only when a task needs it:
 [../knowledge/](../knowledge/) (fundamentals, color, shading and dithering, animation,
-isometric, hardware styles, AI weaknesses).
+isometric, tiles and autotiling, UI, hardware styles, AI weaknesses).
 
 ## The ten rules
 

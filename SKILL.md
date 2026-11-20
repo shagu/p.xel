@@ -16,7 +16,8 @@ scripts, image generators).
 1. Read `ai/README.md` completely and follow its reading order
    (`ai/WORKFLOW.md`, `ai/CHECKLISTS.md`, `ai/STYLES.md`, `docs/language.md`).
 2. Copy the closest template from `ai/templates/` as a starting point:
-   `sprite.xel`, `walk-cycle.xel`, `gameboy-16.xel`, `iso-scene.xel`, `text-panel.xel`.
+   `sprite.xel`, `walk-cycle.xel`, `gameboy-16.xel`, `iso-scene.xel`, `text-panel.xel`,
+   `tiles.xel`.
 3. Background research, only if needed: `knowledge/`.
 
 Never open, read, copy or imitate anything in `examples/`. Those files are a gallery for
