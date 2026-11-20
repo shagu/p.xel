@@ -1,6 +1,6 @@
 ---
 name: p-xel
-description: Create pixel art as code with the p.xel compiler. Use whenever a request involves pixel art in any form - sprites, characters, enemies, items, icons, tiles, tilesets, isometric scenes, sprite sheets, walk or idle animations, retro console styles (Game Boy, NES, SNES, Mega Drive, Diablo II style iso), pixel fonts or UI. Writes .xel files and compiles them to png, animated gif, sprite sheets and ascii previews.
+description: Create pixel art as code with the p.xel compiler. Use whenever a request involves pixel art in any form - sprites, characters, enemies, items, icons, tiles, tilesets, isometric scenes, sprite sheets, walk or idle animations, retro console styles (Game Boy, NES, SNES, Mega Drive, dark fantasy iso), pixel fonts or UI. Writes .xel files and compiles them to png, animated gif, sprite sheets and ascii previews.
 ---
 
 # p.xel pixel art

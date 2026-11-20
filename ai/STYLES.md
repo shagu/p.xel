@@ -17,7 +17,7 @@ Background: [../knowledge/06-hardware-styles.md](../knowledge/06-hardware-styles
 - Walk: 4-beat cycle (stand, step L, stand, step R), 180-250 ms per frame. Side view
   uses 2 frames (stand, stride) mirrored for the other direction.
 
-## pokemon (GB / GBC overworld)
+## gbc (handheld overworld)
 
 - Same proportions as gameboy: 16x16, head is rows 0-8, body 9-15, big head with a
   defining hat/hood/hair shape, tiny body, legs 2-3 px.
@@ -42,7 +42,7 @@ Background: [../knowledge/06-hardware-styles.md](../knowledge/06-hardware-styles
   metal and sky.
 - 32-48 px characters with attitude poses.
 
-## dark-fantasy-iso (Diablo II flavoured)
+## dark-fantasy-iso (ARPG flavoured)
 
 - `palette dark-fantasy`; desaturated earth and steel, blood red and gold accents,
   `ember` for fire light, `spirit` for magic. Near-black `void` shadows.
@@ -53,7 +53,7 @@ Background: [../knowledge/06-hardware-styles.md](../knowledge/06-hardware-styles
 - 8 facing directions (S, SW, W, NW, N, NE, E, SE); draw 5 and mirror 3.
 - Walk 8 frames at ~90-110 ms, idle 4-8 frames at ~150-200 ms (breathing + cape).
 
-## strategy-iso (Age of Empires / Commandos flavoured)
+## strategy-iso (late-90s RTS flavoured)
 
 - Muted, realistic palette with one bright team color accent per unit.
 - Small units (16-32 px tall) on detailed, quiet ground tiles.

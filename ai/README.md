@@ -10,7 +10,7 @@ the result after every pass. This folder tells you how.
 2. [WORKFLOW.md](WORKFLOW.md) - step by step procedures for sprites, animations,
    isometric scenes, sheets and text graphics.
 3. [CHECKLISTS.md](CHECKLISTS.md) - quality gates, detail budgets, pitfall list.
-4. [STYLES.md](STYLES.md) - presets for Game Boy, GBC/Pokemon, SNES, Mega Drive,
+4. [STYLES.md](STYLES.md) - presets for Game Boy, GBC, SNES, Mega Drive,
    dark-fantasy isometric.
 5. [../docs/language.md](../docs/language.md) - the full language reference. Keep it open.
 6. [templates/](templates/) - working files to copy from:

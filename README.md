@@ -109,7 +109,7 @@ Every example was drawn by a fresh agent that was only pointed at [`ai/`](ai/), 
 reviewed, its feedback folded back into the language, and re-exported. Sources sit next
 to the images; rebuild any of them with `node xel.js <file.xel> --out <folder>`.
 
-### Paladin: isometric dark fantasy ARPG (Diablo II style)
+### Paladin: isometric dark fantasy ARPG
 
 Heavy armored paladin, 64x64 frames, 8 directions (5 drawn, 3 mirrored and relit),
 8-frame walk and 5-frame idle per direction, 104 frames driven by one shared pose table.
@@ -147,7 +147,7 @@ stretch, apex hang, impact squash, settle).
 
 Source: [slime.xel](examples/slime/slime.xel).
 
-### Hooded hero, 16x16 Game Boy (Pokemon style)
+### Hooded hero, 16x16 Game Boy overworld
 
 Four DMG shades only, 4 directions with the classic overworld walk, and a 160x144
 screen mock-up to prove it reads on a real map.

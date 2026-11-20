@@ -16,7 +16,7 @@ export const PALETTES = {
     ramps: { bw: ['#000000', '#ffffff'] },
     colors: { ink: '#000000', paper: '#ffffff' }
   },
-  // dark fantasy isometric ARPG look (Diablo II flavoured), 24 colors
+  // dark fantasy isometric ARPG look, 24 colors
   'dark-fantasy': {
     ramps: {
       steel: ['#15161c', '#2b2f3c', '#474d60', '#6b7488', '#9aa3b4'],
@@ -28,7 +28,7 @@ export const PALETTES = {
     },
     colors: { void: '#07070a', ember: '#ff9b3d', spirit: '#7ad7f0' }
   },
-  // bright 16-colour cast palette for small sprites (GBC / Pokemon flavoured)
+  // bright 16-colour cast palette for small sprites (GBC flavoured)
   'pocket-16': {
     ramps: {
       skin: ['#6b3a2a', '#b06840', '#e8a877', '#ffd8b0'],
