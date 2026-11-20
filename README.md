@@ -168,18 +168,6 @@ patterns, a dithered vs banded gradient, a lit sphere and ramp-based torch light
 Animated variant with a title shine: [showcase.gif](examples/showcase/showcase.gif).
 Source: [showcase.xel](examples/showcase/showcase.xel).
 
-### What the agents taught the language
-
-Each example run ended with a list of problems. Most of them are now features:
-even-width ellipses (`ovalbox`), seamless multi-tile blocks and thin walls
-(`isobox w= d=`), cast shadows (`isoshadow`), exact 2:1 lines (`isoline`), round iso
-cylinders, `glow`/`shade` ramp lighting, `rim` relighting for mirrored sprites,
-`only ramp` / `only touching` masks, part defaults, frames generated in loops, dynamic
-part names (`draw torso_$dir`), comparisons and `if()` in expressions, palette prefixes,
-`include`, tag-per-row sheets, `--crop`, a warm-light/cool-shadow auto ramp with even
-value steps, a quieter linter (8-neighbour orphans, dither detection, per tag motion and
-loop-seam checks, body-bob check) and errors instead of hangs on bad numbers.
-
 ## Install as a pi skill
 
 ```bash
